@@ -11,7 +11,7 @@ Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skill
 
 ## Mandatory Workflow 1: Planning & Building
 
-**When your human partner says:** "I've got an idea", "Let's make/build/create", "I want to implement/add", "What if we", "We should"
+**When your human partner wants to start a project, no matter how big or small:**
 
 **YOU MUST immediately use:** `@skills/collaboration/brainstorming/SKILL.md`
 
@@ -113,3 +113,8 @@ Want a skill that doesn't exist? Edit `@skills/REQUESTS.md`
 **Skill has checklist?** TodoWrite for every item.
 
 **Skills are mandatory when they exist, not optional.**
+
+
+## Last thing
+
+In the first response after reading this guide, you MUST announce to the user that you have read the getting started guide
