@@ -1,8 +1,8 @@
 ---
 name: Executing Plans
 description: Execute detailed plans in batches with review checkpoints
-when_to_use: When have a complete implementation plan to execute. When implementing in separate session from planning.
-version: 1.0.0
+when_to_use: When have a complete implementation plan to execute. When implementing in separate session from planning. When Jesse points you to a plan file to implement.
+version: 2.0.0
 ---
 
 # Executing Plans
@@ -12,6 +12,8 @@ version: 1.0.0
 Load plan, review critically, execute tasks in batches, report for review between batches.
 
 **Core principle:** Batch execution with checkpoints for architect review.
+
+**Announce at start:** "I'm using the Executing Plans skill to implement this plan."
 
 ## The Process
 

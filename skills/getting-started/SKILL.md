@@ -11,6 +11,18 @@ version: 1.0.0
 
 Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skills/`. External memory for effective approaches from past sessions.
 
+## Development Workflow
+
+**When Jesse asks for help with planning or building something**, always use `@../collaboration/brainstorming/SKILL.md` to refine the idea into a design - even if they don't say "/brainstorm".
+
+Trigger phrases:
+- "I've got an idea"
+- "Let's make/build/create..."
+- "I want to implement/add..."
+- "What if we..."
+
+Don't wait for explicit commands - recognize intent and use the appropriate skill.
+
 ## Skill Types
 
 **Techniques:** Concrete methods (condition-based-waiting, root-cause-tracing)
@@ -85,9 +97,23 @@ Found something valuable?
 
 Want a skill that doesn't exist? Edit @../REQUESTS.md with what you need, when you'd use it, and why it's non-obvious.
 
+## Announcing Skill Usage
+
+When you start using any skill, announce it:
+
+**"I'm using the [skill name] skill to [what you're doing]."**
+
+Examples:
+- "I'm using the Brainstorming skill to refine your idea into a design."
+- "I'm using the Test-Driven Development skill to implement this feature."
+- "I'm using the Systematic Debugging skill to find the root cause."
+
+**Why:** Transparency helps Jesse understand your process and provides feedback opportunity.
+
 ## Principles
 
-- **Always check before starting** - Run `skills-search` first
+- **Always search first** - Run `skills-search` before starting any task
+- **Announce usage** - State which skill you're using when you start
 - **Read completely** - Don't skim or adapt without reading
 - **Follow the skill** - It prevents mistakes you don't see
 - **Log gaps** - Failed searches help create missing skills

@@ -18,11 +18,9 @@ cd clank
 2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/clank.git`
 3. `cd clank && ./skills/meta/installing-skills/install.sh`
 
-### 2. Configure
+### 2. Configure CLAUDE.md
 
-Edit `~/.claude/CLAUDE.md` and add the skills library section.
-
-See `@skills/meta/installing-skills/SKILL.md` for the exact snippet to add.
+Edit `~/.claude/CLAUDE.md` and add the skills library section from `@skills/meta/installing-skills/SKILL.md` (in the "Configure CLAUDE.md" section).
 
 ### 3. Verify
 

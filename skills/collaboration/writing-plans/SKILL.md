@@ -1,8 +1,8 @@
 ---
 name: Writing Plans
 description: Create detailed implementation plans with bite-sized tasks for engineers with zero codebase context
-when_to_use: After brainstorming/design is complete. Before implementation begins. When delegating to another developer or session.
-version: 1.0.0
+when_to_use: After brainstorming/design is complete. Before implementation begins. When delegating to another developer or session. When brainstorming skill hands off to planning.
+version: 2.0.0
 ---
 
 # Writing Plans
@@ -12,6 +12,10 @@ version: 1.0.0
 Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
 
 Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+
+**Announce at start:** "I'm using the Writing Plans skill to create the implementation plan."
+
+**Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
 **Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
 
@@ -73,3 +77,13 @@ git commit -m "feat: add specific feature"
 - Exact commands with expected output
 - Reference relevant skills with @ syntax
 - DRY, YAGNI, TDD, frequent commits
+
+## Execution Handoff
+
+After saving the plan, tell Jesse:
+
+**"Plan complete and saved to `docs/plans/<filename>.md`. Ready to implement?"**
+
+When Jesse confirms (any affirmative response):
+- Guide them to open a new Claude session in the worktree directory
+- Tell them the new session will use `@../executing-plans/SKILL.md` to implement the plan

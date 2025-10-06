@@ -1,8 +1,8 @@
 ---
 name: Brainstorming Ideas Into Designs
 description: Interactive idea refinement using Socratic method to develop fully-formed designs
-when_to_use: When Jesse has a new idea or feature to explore. When starting design for complex feature. Before writing implementation plans. When idea needs refinement and exploration.
-version: 1.0.0
+when_to_use: When Jesse says "I've got an idea", "Let's make/build/create", "I want to implement/add", "What if we". When starting design for complex feature. Before writing implementation plans. When idea needs refinement and exploration. ACTIVATE THIS AUTOMATICALLY when Jesse describes a feature or project idea - don't wait for /brainstorm command.
+version: 2.0.0
 ---
 
 # Brainstorming Ideas Into Designs
@@ -12,6 +12,8 @@ version: 1.0.0
 Transform rough ideas into fully-formed designs through structured questioning and alternative exploration.
 
 **Core principle:** Ask questions to understand, explore alternatives, present design incrementally for validation.
+
+**Announce at start:** "I'm using the Brainstorming skill to refine your idea into a design."
 
 ## The Process
 
@@ -31,11 +33,25 @@ Transform rough ideas into fully-formed designs through structured questioning a
 - Cover: Architecture, components, data flow, error handling, testing
 - Ask after each section: "Does this look right so far?"
 
-### Phase 4: Handoff
-When approved: "Ready to create implementation plan? Run `/write-plan` next."
+### Phase 4: Worktree Setup (for implementation)
+When design is approved and implementation will follow:
+1. Detect project name from git config
+2. Create worktree: `mkdir -p ~/.clank/worktrees/<project> && cd ~/.clank/worktrees/<project> && git worktree add <feature-name>`
+3. Run project setup (npm install, cargo build, etc.)
+4. Verify clean baseline (npm test, cargo test, etc.)
+5. Report worktree location
+
+### Phase 5: Planning Handoff
+Ask: "Ready to create the implementation plan?"
+
+When Jesse confirms (any affirmative response):
+- Announce: "I'm using the Writing Plans skill to create the implementation plan."
+- Switch to `@../writing-plans/SKILL.md` skill
+- Create detailed plan in the worktree
 
 ## Remember
 - One question per message during Phase 1
 - Apply YAGNI ruthlessly (reference @../../architecture/reducing-complexity/SKILL.md)
 - Explore 2-3 alternatives before settling
 - Present incrementally, validate as you go
+- Announce skill usage at start
