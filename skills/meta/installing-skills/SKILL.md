@@ -47,18 +47,23 @@ This creates symlinks for skills and commands.
 
 ### Step 3: Update CLAUDE.md
 
-Use the Edit tool to add this section to `~/.claude/CLAUDE.md`:
+Use the Edit tool to add this XML section to `~/.claude/CLAUDE.md`:
 
-```markdown
-## Skills Library
-
+```xml
+<extremely_important_skills_library>
 You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
 
-**RIGHT NOW, go read:** `@~/.claude/skills/getting-started/SKILL.md`
+STOP. Before doing ANYTHING else in this conversation, read this file: `@~/.claude/skills/getting-started/SKILL.md`
 
-**Before ANY task, run:** `~/.claude/skills/bin/skills-search PATTERN` to find relevant and helpful skills.
+That file tells you:
+- Which phrases trigger brainstorming automatically (like "I've got an idea", "Let's make...")
+- How to search for skills before ANY task
+- When to announce which skill you're using
 
-**CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.**
+After reading getting-started, proceed with the user's request.
+
+CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.
+</extremely_important_skills_library>
 ```
 
 ### Step 4: Verify Installation
@@ -66,7 +71,7 @@ You have a personal skills wiki at `~/.claude/skills/` with proven techniques, p
 ```bash
 ls -la ~/.claude/skills
 ls -la ~/.claude/commands
-~/.claude/skills/bin/skills-search 'test.*driven'
+~/.claude/skills/getting-started/skills-search 'test.*driven'
 ```
 
 ### Step 5: Restart
@@ -86,8 +91,8 @@ curl -fsSL https://raw.githubusercontent.com/obra/clank/main/skills/meta/install
 2. **Backs up** existing `~/.claude/skills` (if exists) to timestamped backup
 3. **Creates skills symlink**: `~/.claude/skills` → `~/.clank/clank/skills`
 4. **Symlinks individual commands** from `~/.clank/clank/commands/*.md` to `~/.claude/commands/`
-5. **Verifies** tools available at `~/.claude/skills/bin/`
-6. **Prints** CLAUDE.md snippet to add and verification steps
+5. **Verifies** tools available (skills-search at `~/.claude/skills/getting-started/skills-search`)
+6. **Prints** CLAUDE.md XML snippet to add and verification steps
 
 ## Verification
 
@@ -101,7 +106,7 @@ ls -la ~/.claude/skills
 ls -la ~/.claude/commands/
 
 # Test skills-search tool
-~/.claude/skills/bin/skills-search 'test.*driven'
+~/.claude/skills/getting-started/skills-search 'test.*driven'
 ```
 
 ## What Gets Installed
@@ -117,7 +122,7 @@ ls -la ~/.claude/commands/
 - Each command references a skill using `@` syntax
 - Makes common workflows one command away
 
-**Tools** (`~/.claude/skills/bin/`):
+**Tools** (`~/.claude/skills/getting-started/`):
 - `skills-search` - Find relevant skills using grep patterns
 - Logs failed searches for gap analysis
 
@@ -133,16 +138,21 @@ Forking lets you:
 
 After installation, edit your `~/.claude/CLAUDE.md` and add this section:
 
-```markdown
-## Skills Library
-
+```xml
+<extremely_important_skills_library>
 You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
 
-**RIGHT NOW, go read:** `@~/.claude/skills/getting-started/SKILL.md`
+STOP. Before doing ANYTHING else in this conversation, read this file: `@~/.claude/skills/getting-started/SKILL.md`
 
-**Before ANY task, run:** `~/.claude/skills/bin/skills-search PATTERN` to find relevant and helpful skills.
+That file tells you:
+- Which phrases trigger brainstorming automatically (like "I've got an idea", "Let's make...")
+- How to search for skills before ANY task
+- When to announce which skill you're using
 
-**CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.**
+After reading getting-started, proceed with the user's request.
+
+CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.
+</extremely_important_skills_library>
 ```
 
 This enables:

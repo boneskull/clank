@@ -102,16 +102,11 @@ symlink_commands() {
 
 # Verify tools exist
 verify_tools() {
-  local repo_path="$1"
-  local tools_dir="${repo_path}/skills/bin"
+  local skills_dir="$HOME/.claude/skills"
+  local skills_search="${skills_dir}/getting-started/skills-search"
 
-  if [[ -d "$tools_dir" ]]; then
-    echo "Tools available at:"
-    echo "  ${tools_dir}"
-    echo ""
-    echo "Add to CLAUDE.md:"
-    echo "  skills-search: ${tools_dir}/skills-search"
-    echo -e "${GREEN}✓${NC} Tools verified"
+  if [[ -x "$skills_search" ]]; then
+    echo -e "${GREEN}✓${NC} skills-search tool available"
     echo ""
   fi
 }
@@ -157,18 +152,23 @@ print_success() {
   echo ""
   echo -e "${YELLOW}NEXT STEP: Update ~/.claude/CLAUDE.md${NC}"
   echo ""
-  echo "Add this section to your CLAUDE.md:"
+  echo "Add this XML section to your CLAUDE.md:"
   echo ""
   cat <<'EOF'
-## Skills Library
-
+<extremely_important_skills_library>
 You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
 
-**RIGHT NOW, go read:** `@~/.claude/skills/getting-started/SKILL.md`
+STOP. Before doing ANYTHING else in this conversation, read this file: `@~/.claude/skills/getting-started/SKILL.md`
 
-**Before ANY task, run:** `~/.claude/skills/bin/skills-search PATTERN` to find relevant and helpful skills.
+That file tells you:
+- Which phrases trigger brainstorming automatically (like "I've got an idea", "Let's make...")
+- How to search for skills before ANY task
+- When to announce which skill you're using
 
-**CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.**
+After reading getting-started, proceed with the user's request.
+
+CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.
+</extremely_important_skills_library>
 EOF
   echo ""
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -176,7 +176,7 @@ EOF
   echo "Verify installation:"
   echo "  ${GREEN}ls -la ~/.claude/skills${NC}"
   echo "  ${GREEN}ls ~/.claude/commands/${NC}"
-  echo "  ${GREEN}~/.claude/skills/bin/skills-search 'test.*driven'${NC}"
+  echo "  ${GREEN}~/.claude/skills/getting-started/skills-search 'test.*driven'${NC}"
   echo ""
   echo "Repository location: ${repo_path}"
   echo ""

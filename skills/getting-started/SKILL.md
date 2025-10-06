@@ -11,17 +11,20 @@ version: 1.0.0
 
 Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skills/`. External memory for effective approaches from past sessions.
 
-## Development Workflow
+## Critical: Just Writing Code is Almost Never the Right First Step
 
-**When Jesse asks for help with planning or building something**, always use `@../collaboration/brainstorming/SKILL.md` to refine the idea into a design - even if they don't say "/brainstorm".
+**We always need to understand requirements and create a plan first.**
 
-Trigger phrases:
+When Jesse asks for help with planning or building something, your FIRST action is to use `@../collaboration/brainstorming/SKILL.md` to refine the idea into a design.
+
+**Trigger phrases (activate brainstorming automatically):**
 - "I've got an idea"
 - "Let's make/build/create..."
 - "I want to implement/add..."
 - "What if we..."
+- "We should..."
 
-Don't wait for explicit commands - recognize intent and use the appropriate skill.
+**Don't jump to code.** Don't wait for "/brainstorm" command. Recognize intent and activate the skill immediately.
 
 ## Skill Types
 
@@ -60,31 +63,31 @@ Don't wait for explicit commands - recognize intent and use the appropriate skil
 
 Skills are starting points - adapt to your context.
 
-## Your Workflow: Always Start with skills-search
+## Your Workflow: Always Search for Skills First
 
-**Before ANY task, run:** `skills-search PATTERN`
+**Before ANY task, search for relevant skills.**
+
+**Use the skills-search tool:**
+```bash
+~/.claude/skills/getting-started/skills-search PATTERN
+```
 
 The tool uses grep patterns. Examples:
-- `skills-search 'test.*driven|TDD'`
-- `skills-search 'debug.*systematic|root.cause'`
-- `skills-search 'refactor|extract'`
-- `skills-search 'async.*test|flaky|timeout'`
+- `~/.claude/skills/getting-started/skills-search 'test.*driven|TDD'`
+- `~/.claude/skills/getting-started/skills-search 'debug.*systematic|root.cause'`
+- `~/.claude/skills/getting-started/skills-search 'refactor|extract'`
 
-**What happens:**
-1. Tool searches all skills for your pattern
-2. Shows matching skills with when_to_use
-3. Logs failed searches (so missing skills get created)
+**What it does:**
+1. Searches all skills for your pattern
+2. Shows results: `@skills/path/SKILL.md - description`
+3. Logs failed searches (gap analysis for missing skills)
 
 **If skills found:** READ them completely and FOLLOW them
 **If not found:** Proceed carefully - your approach may become a skill
 
 **Critical:** If a skill exists, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make.
 
-## Fallback: Manual Search
-
-If `skills-search` isn't available:
-- `grep -r "keyword" ~/.claude/skills/ --include="SKILL.md"`
-- Ask Jesse: "Do I have a skill for X?"
+See @skills-search tool for implementation.
 
 ## Creating Skills
 

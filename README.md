@@ -35,8 +35,8 @@ Copy that snippet and add it to your CLAUDE.md file.
 ### 3. Verify
 
 ```bash
-# Test tools
-~/.claude/skills/bin/skills-search 'test.*driven'
+# Test skills-search tool
+~/.claude/skills/getting-started/skills-search 'test.*driven'
 
 # Check commands
 ls ~/.claude/commands/
@@ -46,9 +46,9 @@ ls ~/.claude/commands/
 
 **Find skills for your task:**
 ```bash
-~/.claude/skills/bin/skills-search 'async.*test|flaky'
-~/.claude/skills/bin/skills-search 'debug.*systematic'
-~/.claude/skills/bin/skills-search 'refactor'
+~/.claude/skills/getting-started/skills-search 'async.*test|flaky'
+~/.claude/skills/getting-started/skills-search 'debug.*systematic'
+~/.claude/skills/getting-started/skills-search 'refactor'
 ```
 
 **Use workflow commands:**
