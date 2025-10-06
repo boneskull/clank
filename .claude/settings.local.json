@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Read(//Users/jesse/.claude/commands/**)",
+      "Read(//Users/jesse/Documents/GitHub/dotfiles/.claude/skills/testing/**)",
+      "Read(//Users/jesse/.claude/skills/testing/condition-based-waiting/**)",
+      "Read(//Users/jesse/Documents/GitHub/dotfiles/.claude/skills/coding/**)",
+      "Read(//Users/jesse/.claude/skills/coding/refactoring-safely/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

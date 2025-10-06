@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# skills-search - Find relevant skills using grep patterns
+# Logs all searches for gap analysis (gardening skill processes the log)
+
+set -euo pipefail
+
+SKILLS_DIR="${HOME}/.claude/skills"
+LOG_FILE="${SKILLS_DIR}/.search-log.jsonl"
+
+# Show usage if no arguments
+if [[ $# -eq 0 ]]; then
+    cat <<'EOF'
+Usage: skills-search PATTERN [PATTERN...]
+
+Searches skills using grep patterns.
+
+Examples:
+  skills-search 'test.*driven|TDD'
+  skills-search 'debug.*systematic|root.cause'
+  skills-search 'refactor|extract'
+  skills-search 'async.*test|flaky|timeout'
+  skills-search 'validat.*input'
+
+The search is logged. Failed searches help identify missing skills.
+EOF
+    exit 1
+fi
+
+# Log the search for gap analysis
+timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+query="$*"
+echo "{\"timestamp\":\"$timestamp\",\"query\":\"$query\"}" >> "$LOG_FILE" 2>/dev/null || true
+
+# Search all SKILL.md files
+results=$(grep -r "$@" "$SKILLS_DIR" --include="SKILL.md" -l 2>/dev/null || true)
+
+if [[ -z "$results" ]]; then
+    echo "❌ No skills found matching: $*"
+    echo ""
+    echo "Search logged. If a skill should exist, it will be created."
+    echo "Proceed carefully - document your approach."
+    exit 1
+fi
+
+echo "✅ Found skills:"
+echo ""
+
+# Display results with metadata
+echo "$results" | while read -r file; do
+    # Extract name from frontmatter
+    name=$(grep "^name:" "$file" 2>/dev/null | sed 's/name: *//' || echo "Unknown")
+
+    # Extract when_to_use
+    when=$(grep "^when_to_use:" "$file" 2>/dev/null | sed 's/when_to_use: *//' | head -c 120 || echo "")
+
+    # Get relative path
+    rel_path="${file#$SKILLS_DIR/}"
+
+    echo "📚 $name"
+    if [[ -n "$when" ]]; then
+        echo "   When: $when..."
+    fi
+    echo "   @$rel_path"
+    echo ""
+done
+
+exit 0

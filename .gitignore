@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Skills search log (local gap analysis)
+skills/.search-log.jsonl
