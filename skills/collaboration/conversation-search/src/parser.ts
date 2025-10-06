@@ -26,7 +26,32 @@ export async function parseConversation(
   });
 
   let lineNumber = 0;
-  let currentUser: { message: string; line: number } | null = null;
+  let currentExchange: {
+    userMessage: string;
+    userLine: number;
+    assistantMessages: string[];
+    lastAssistantLine: number;
+    timestamp: string;
+  } | null = null;
+
+  const finalizeExchange = () => {
+    if (currentExchange && currentExchange.assistantMessages.length > 0) {
+      const exchange: ConversationExchange = {
+        id: crypto
+          .createHash('md5')
+          .update(`${archivePath}:${currentExchange.userLine}-${currentExchange.lastAssistantLine}`)
+          .digest('hex'),
+        project: projectName,
+        timestamp: currentExchange.timestamp,
+        userMessage: currentExchange.userMessage,
+        assistantMessage: currentExchange.assistantMessages.join('\n\n'),
+        archivePath,
+        lineStart: currentExchange.userLine,
+        lineEnd: currentExchange.lastAssistantLine
+      };
+      exchanges.push(exchange);
+    }
+  };
 
   for await (const line of rl) {
     lineNumber++;
@@ -54,32 +79,40 @@ export async function parseConversation(
           .join('\n');
       }
 
-      if (parsed.message.role === 'user') {
-        currentUser = { message: text, line: lineNumber };
-      } else if (parsed.message.role === 'assistant' && currentUser) {
-        // Create exchange
-        const exchange: ConversationExchange = {
-          id: crypto
-            .createHash('md5')
-            .update(`${archivePath}:${currentUser.line}-${lineNumber}`)
-            .digest('hex'),
-          project: projectName,
-          timestamp: parsed.timestamp || new Date().toISOString(),
-          userMessage: currentUser.message,
-          assistantMessage: text,
-          archivePath,
-          lineStart: currentUser.line,
-          lineEnd: lineNumber
-        };
+      // Skip empty messages
+      if (!text.trim()) {
+        continue;
+      }
 
-        exchanges.push(exchange);
-        currentUser = null;
+      if (parsed.message.role === 'user') {
+        // Finalize previous exchange before starting new one
+        finalizeExchange();
+
+        // Start new exchange
+        currentExchange = {
+          userMessage: text,
+          userLine: lineNumber,
+          assistantMessages: [],
+          lastAssistantLine: lineNumber,
+          timestamp: parsed.timestamp || new Date().toISOString()
+        };
+      } else if (parsed.message.role === 'assistant' && currentExchange) {
+        // Accumulate assistant messages
+        currentExchange.assistantMessages.push(text);
+        currentExchange.lastAssistantLine = lineNumber;
+        // Update timestamp to last assistant message
+        if (parsed.timestamp) {
+          currentExchange.timestamp = parsed.timestamp;
+        }
       }
     } catch (error) {
       // Skip malformed JSON lines
       continue;
     }
   }
+
+  // Finalize last exchange
+  finalizeExchange();
 
   return exchanges;
 }
