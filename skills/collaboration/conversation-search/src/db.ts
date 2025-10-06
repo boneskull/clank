@@ -68,9 +68,12 @@ export function insertExchange(
     exchange.lineEnd
   );
 
-  // Insert into vector table
+  // Insert into vector table (delete first since virtual tables don't support REPLACE)
+  const delStmt = db.prepare(`DELETE FROM vec_exchanges WHERE id = ?`);
+  delStmt.run(exchange.id);
+
   const vecStmt = db.prepare(`
-    INSERT OR REPLACE INTO vec_exchanges (id, embedding)
+    INSERT INTO vec_exchanges (id, embedding)
     VALUES (?, ?)
   `);
 
