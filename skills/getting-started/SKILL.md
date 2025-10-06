@@ -47,21 +47,71 @@ When Jesse asks for help with planning or building something, your FIRST action 
 
 **Supporting files:** Load only when needed (`example.ts`, `script.sh`)
 
-## Using Skills
+## How to Read a Skill Efficiently
 
-### Quick Evaluation (2 min)
-1. Frontmatter: Does `when_to_use` match?
-2. Overview: Core principle relevant?
-3. Quick reference: Any patterns match?
-4. Implementation: How to apply?
-5. Supporting files: Load only when implementing
+**Quick evaluation (2-3 minutes):**
 
-### Application
-- **Techniques:** Follow pattern, adapt code
-- **Patterns:** Understand model, evaluate fit, implement if beneficial
-- **References:** Find task, follow workflow
+1. **Frontmatter (5 sec)** - Does `when_to_use` match your situation?
+2. **Overview (10 sec)** - Is the core principle relevant?
+3. **Quick Reference (15 sec)** - Any patterns match your need?
+4. **Implementation (1-2 min)** - How to apply this
+5. **Supporting files** - Load only when implementing (@example.ts, @script.sh)
 
-Skills are starting points - adapt to your context.
+**Don't read everything upfront** - evaluate relevance first, load details when applying.
+
+## Applying Different Skill Types
+
+**Techniques** (condition-based-waiting, root-cause-tracing):
+1. Read the core pattern
+2. Understand the transformation (before → after)
+3. Apply to your code
+4. Adapt the example if needed
+
+**Patterns** (reducing-complexity, information-hiding):
+1. Understand the mental model shift
+2. Evaluate if it applies to your situation
+3. Sketch the alternative architecture
+4. Implement if benefits are clear
+
+**References** (API docs, command guides):
+1. Find the specific task you need
+2. Follow the exact code/workflow
+3. Load heavy reference docs when needed
+4. Use provided scripts/tools
+
+## When Skill Has a Checklist
+
+**CRITICAL: If a skill has a checklist, you MUST create TodoWrite todos for each item.**
+
+This ensures you:
+- Complete all steps systematically
+- Don't skip steps
+- Track progress visibly
+- Can't claim completion without checking all boxes
+
+**Examples with checklists:**
+- Creating skills → Todo for each checklist item
+- TDD → Todo for each step (write test, watch fail, write code, etc.)
+- Systematic debugging → Todo for each phase
+- Code review → Todo for each review item
+
+**Do NOT:**
+- Read checklist and work through mentally
+- Skip creating todos "to save time"
+- Batch multiple checklist items into one todo
+- Mark complete without actually doing them
+
+**Why:** Checklists without tracking = steps get skipped. TodoWrite makes the process visible and enforced.
+
+## When Skill Doesn't Quite Fit
+
+**Adapt, don't abandon:**
+- Core principle still applies
+- Example in different language? Port it
+- Pattern needs tweaking? Adapt to your context
+- Tool needs modification? Fork and customize
+
+**Skills are starting points, not rigid rules.**
 
 ## Your Workflow: Always Search for Skills First
 

@@ -4,9 +4,7 @@ Skills about skills - how to create and use the skills system.
 
 ## Available Skills
 
-- @installing-skills/SKILL.md - Fork, clone, and symlink clank repo to ~/.claude/skills. Use for initial setup, reinstalling, or switching skills repos.
-
-- @using-skills/SKILL.md - How to discover and apply existing skills to your work. Read this to understand how to search for and use skills effectively.
+- @installing-skills/SKILL.md - Fork, clone, and symlink clank repo to ~/.claude/skills. Use for initial setup, installing clank for the first time.
 
 - @creating-skills/SKILL.md - How to create effective skills for future Claude instances. Use when you discover a technique, pattern, or tool worth documenting for reuse.
 
