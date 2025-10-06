@@ -3,3 +3,7 @@
 
 # Skills search log (local gap analysis)
 skills/.search-log.jsonl
+conversation-archive/
+conversation-archive/
+conversation-index/
+worktrees/

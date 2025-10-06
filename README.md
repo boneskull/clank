@@ -29,7 +29,7 @@ You have a personal skills wiki at `~/.claude/skills/` with proven techniques, p
 
 **RIGHT NOW, go read:** `@~/.claude/skills/getting-started/SKILL.md`
 
-**Before ANY task, use:** `~/.claude/skills/bin/skills-search PATTERN`
+**Before ANY task, run:** `~/.claude/skills/bin/skills-search PATTERN` to find relevant and helpful skills.
 
 **Critical:** If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not.
 
