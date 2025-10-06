@@ -49,12 +49,15 @@ The master script runs all checks and provides a health report.
 ### 1. Link Validation (`check-links.sh`)
 
 **Checks:**
-- All `@` references resolve to existing files
-- Relative paths (`@skills/`) work correctly
+- Backtick-wrapped `@` links (`` `@path/SKILL.md` ``) - disables resolution
+- Relative paths (`@../` or `@~/`) - should use `@skills/` absolute paths
+- All `@skills/` references resolve to existing files
 - Skills referenced in INDEX files exist
 - Orphaned skills (not in any INDEX)
 
 **Fixes:**
+- Remove backticks: `` `@skills/path/SKILL.md` `` → `@skills/path/SKILL.md`
+- Convert relative to absolute: `@../testing/SKILL.md` → `@skills/testing/SKILL.md`
 - Update broken `@` references to correct paths
 - Add orphaned skills to their category INDEX
 - Remove references to deleted skills
@@ -107,6 +110,41 @@ The master script runs all checks and provides a health report.
 
 ```markdown
 - @test-invariants/SKILL.md - Description of skill
+```
+
+### Backtick-Wrapped Links
+
+```
+❌ BACKTICKED: @skills/testing/condition-based-waiting/SKILL.md on line 31
+   File: getting-started/SKILL.md
+   Fix: Remove backticks - use bare @ reference
+```
+
+**Fix:** Remove backticks:
+
+```markdown
+# ❌ Bad - backticks disable link resolution
+`@skills/testing/condition-based-waiting/SKILL.md`
+
+# ✅ Good - bare @ reference
+@skills/testing/condition-based-waiting/SKILL.md
+```
+
+### Relative Path Links
+
+```
+❌ RELATIVE: @../testing/SKILL.md in coding/SKILL.md
+   Fix: Use @skills/ absolute path instead
+```
+
+**Fix:** Convert to absolute path:
+
+```markdown
+# ❌ Bad - relative paths are brittle
+@../testing/condition-based-waiting/SKILL.md
+
+# ✅ Good - absolute @skills/ path
+@skills/testing/condition-based-waiting/SKILL.md
 ```
 
 ### Naming Issues
@@ -231,7 +269,9 @@ Runs all health checks and provides comprehensive report.
 Validates all `@` references and cross-links.
 
 **Checks:**
-- `@` reference resolution
+- Backtick-wrapped `@` links (disables resolution)
+- Relative paths (`@../` or `@~/`) - should be `@skills/`
+- `@` reference resolution to existing files
 - Skills in INDEX files exist
 - Orphaned skills detection
 
@@ -257,6 +297,8 @@ Validates INDEX completeness.
 
 | Issue | Script | Fix |
 |-------|--------|-----|
+| Backtick-wrapped links | `check-links.sh` | Remove backticks from `@` refs |
+| Relative paths | `check-links.sh` | Convert to `@skills/` absolute |
 | Broken links | `check-links.sh` | Update `@` references |
 | Orphaned skills | `check-links.sh` | Add to INDEX |
 | Naming issues | `check-naming.sh` | Rename directories |
