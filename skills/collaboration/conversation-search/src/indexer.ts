@@ -9,7 +9,7 @@ import { ConversationExchange } from './types.js';
 const PROJECTS_DIR = path.join(os.homedir(), '.claude', 'projects');
 const ARCHIVE_DIR = path.join(os.homedir(), '.clank', 'conversation-archive');
 
-export async function indexConversations(): Promise<void> {
+export async function indexConversations(limitToProject?: string): Promise<void> {
   console.log('Initializing database...');
   const db = initDatabase();
 
@@ -22,6 +22,8 @@ export async function indexConversations(): Promise<void> {
   let totalExchanges = 0;
 
   for (const project of projects) {
+    // Skip if limiting to specific project
+    if (limitToProject && project !== limitToProject) continue;
     const projectPath = path.join(PROJECTS_DIR, project);
     const stat = fs.statSync(projectPath);
 

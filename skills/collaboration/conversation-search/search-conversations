@@ -1,0 +1,10 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+
+if [ $# -eq 0 ]; then
+  echo "Usage: search-conversations <query>"
+  exit 1
+fi
+
+QUERY="$*"
+npx tsx src/search-cli.ts "$QUERY"
