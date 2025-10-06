@@ -47,21 +47,19 @@ echo ""
 
 # Display results with metadata
 echo "$results" | while read -r file; do
-    # Extract name from frontmatter
-    name=$(grep "^name:" "$file" 2>/dev/null | sed 's/name: *//' || echo "Unknown")
+    # Extract description from frontmatter
+    description=$(grep "^description:" "$file" 2>/dev/null | sed 's/description: *//' || echo "")
 
-    # Extract when_to_use
-    when=$(grep "^when_to_use:" "$file" 2>/dev/null | sed 's/when_to_use: *//' | head -c 120 || echo "")
+    # Get relative path with @ prefix
+    rel_path="@${file#$SKILLS_DIR/}"
 
-    # Get relative path
-    rel_path="${file#$SKILLS_DIR/}"
-
-    echo "📚 $name"
-    if [[ -n "$when" ]]; then
-        echo "   When: $when..."
+    if [[ -n "$description" ]]; then
+        echo "$rel_path - $description"
+    else
+        echo "$rel_path"
     fi
-    echo "   @$rel_path"
-    echo ""
 done
+
+echo ""
 
 exit 0

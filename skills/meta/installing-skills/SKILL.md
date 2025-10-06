@@ -92,14 +92,26 @@ Forking lets you:
 - **Stay synced** with upstream updates (`git pull upstream main`)
 - **Track** your customizations in version control
 
-## Add to CLAUDE.md
+## Configure CLAUDE.md
 
-Copy content from `~/.claude/skills/CLAUDE_MD_REFERENCE.md` to your `~/.claude/CLAUDE.md`.
+After installation, edit your `~/.claude/CLAUDE.md` and add this section:
+
+```markdown
+## Skills Library
+
+You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
+
+**RIGHT NOW, go read:** `@~/.claude/skills/getting-started/SKILL.md`
+
+**Before ANY task, run:** `~/.claude/skills/bin/skills-search PATTERN` to find relevant and helpful skills.
+
+**CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.**
+```
 
 This enables:
-- Automatic skill discovery before tasks
+- Automatic skill discovery before every task
 - Mandatory skill usage enforcement
-- Gap tracking for missing skills
+- Gap tracking for missing skills (logged searches)
 
 ## Updating Skills
 
