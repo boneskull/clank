@@ -1,8 +1,8 @@
 ---
 name: Installing Skills System
-description: Fork, clone, and symlink clank repo to ~/.claude/skills
-when_to_use: Initial setup, reinstalling after updates, switching skills repos
-version: 1.0.0
+description: Fork, clone to ~/.clank, run installer, edit CLAUDE.md
+when_to_use: Initial setup, installing clank for the first time
+version: 2.0.0
 languages: bash
 ---
 
@@ -10,62 +10,98 @@ languages: bash
 
 ## Overview
 
-Installs the clank skills repository by forking, cloning, and symlinking to `~/.claude/skills`.
+Installs the clank skills repository to `~/.clank/clank` and configures Claude to use it.
 
-**Core principle:** Fork first so you can customize skills and contribute improvements back.
+**For Claude agents:** Follow the "Installation Steps for Claude" section below.
 
-## Prerequisites
+**For humans:** Follow the "Quick Install" section.
 
-- Git installed
-- GitHub account
-- (Optional) GitHub CLI (`gh`) for easier forking
+## Installation Steps for Claude
 
-## Quick Install
+When instructed to install clank, follow these steps exactly:
 
-### With GitHub CLI (Recommended)
+### Step 1: Clone Repository
+
+**With GitHub CLI (if available):**
+```bash
+mkdir -p ~/.clank
+cd ~/.clank
+gh repo fork obra/clank --clone --remote-name upstream
+```
+
+**Without GitHub CLI:**
+```bash
+mkdir -p ~/.clank
+cd ~/.clank
+git clone https://github.com/obra/clank.git
+```
+
+### Step 2: Run Installer
 
 ```bash
-gh repo fork obra/clank --clone
-cd clank
+cd ~/.clank/clank
 ./skills/meta/installing-skills/install.sh
 ```
 
-### Without GitHub CLI
+This creates symlinks for skills and commands.
 
-1. Fork https://github.com/obra/clank via web UI
-2. Clone your fork:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/clank.git
-   cd clank
-   ./skills/meta/installing-skills/install.sh
-   ```
+### Step 3: Update CLAUDE.md
+
+Use the Edit tool to add this section to `~/.claude/CLAUDE.md`:
+
+```markdown
+## Skills Library
+
+You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
+
+**RIGHT NOW, go read:** `@~/.claude/skills/getting-started/SKILL.md`
+
+**Before ANY task, run:** `~/.claude/skills/bin/skills-search PATTERN` to find relevant and helpful skills.
+
+**CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.**
+```
+
+### Step 4: Verify Installation
+
+```bash
+ls -la ~/.claude/skills
+ls -la ~/.claude/commands
+~/.claude/skills/bin/skills-search 'test.*driven'
+```
+
+### Step 5: Restart
+
+Tell Jesse: "Installation complete. Please restart your Claude session to pick up the new CLAUDE.md configuration."
+
+## Quick Install (for humans)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/obra/clank/main/skills/meta/installing-skills/install.sh | bash
+# Then manually add CLAUDE.md section from Step 3 above
+```
 
 ## What install.sh Does
 
-1. **Validates** you're running from clank repo root
-2. **Backs up** existing directories with timestamps (if they exist):
-   - `~/.claude/skills` → `~/.claude/skills.backup.YYYY-MM-DD-HHMMSS`
-   - `~/.claude/commands` → `~/.claude/commands.backup.YYYY-MM-DD-HHMMSS`
-3. **Creates symlinks**:
-   - `~/.claude/skills` → `/path/to/clank/skills`
-   - `~/.claude/commands` → `/path/to/clank/commands`
-4. **Verifies** tools available at `~/.claude/skills/bin/`
-5. **Verifies** installation and prints next steps
+1. **Validates** you're running from clank repo root (expects ~/.clank/clank)
+2. **Backs up** existing `~/.claude/skills` (if exists) to timestamped backup
+3. **Creates skills symlink**: `~/.claude/skills` → `~/.clank/clank/skills`
+4. **Symlinks individual commands** from `~/.clank/clank/commands/*.md` to `~/.claude/commands/`
+5. **Verifies** tools available at `~/.claude/skills/bin/`
+6. **Prints** CLAUDE.md snippet to add and verification steps
 
 ## Verification
 
 After installation, verify it worked:
 
 ```bash
-# Should show symlinks to your clank directories
+# Should show symlink to ~/.clank/clank/skills
 ls -la ~/.claude/skills
-ls -la ~/.claude/commands
+
+# Should show individual command symlinks
+ls -la ~/.claude/commands/
 
 # Test skills-search tool
 ~/.claude/skills/bin/skills-search 'test.*driven'
-
-# Check available commands
-ls ~/.claude/commands/
 ```
 
 ## What Gets Installed
@@ -76,6 +112,7 @@ ls ~/.claude/commands/
 - Searchable with `skills-search` tool
 
 **Commands** (`~/.claude/commands/`):
+- Individual symlinks to clank command files
 - Slash commands for Claude (`/brainstorm`, `/write-plan`, `/execute-plan`)
 - Each command references a skill using `@` syntax
 - Makes common workflows one command away
@@ -118,7 +155,7 @@ This enables:
 After initial install, update with:
 
 ```bash
-cd /path/to/clank
+cd ~/.clank/clank
 git pull origin main    # Pull your changes
 git pull upstream main  # Pull upstream updates (if configured)
 ```
@@ -129,8 +166,10 @@ The symlinks stay valid - no need to reinstall.
 
 ### "Error: Not running from clank repository root"
 
-You're not in the clank directory. Clone it first:
+The script expects to be run from `~/.clank/clank/`. Clone it first:
 ```bash
+mkdir -p ~/.clank
+cd ~/.clank
 gh repo fork obra/clank --clone
 cd clank
 ./skills/meta/installing-skills/install.sh
@@ -141,16 +180,15 @@ cd clank
 The installer automatically backs it up with timestamp. Check backups:
 ```bash
 ls -la ~/.claude/skills.backup.*
-ls -la ~/.claude/commands.backup.*
 ```
 
-### Symlink broken
+### Symlinks broken
 
 Remove and reinstall:
 ```bash
 rm ~/.claude/skills
-rm ~/.claude/commands
-cd /path/to/clank
+rm ~/.claude/commands/*.md  # Remove individual command symlinks
+cd ~/.clank/clank
 ./skills/meta/installing-skills/install.sh
 ```
 
@@ -159,14 +197,18 @@ cd /path/to/clank
 ```bash
 # Remove symlinks
 rm ~/.claude/skills
-rm ~/.claude/commands
+rm ~/.claude/commands/brainstorm.md
+rm ~/.claude/commands/write-plan.md
+rm ~/.claude/commands/execute-plan.md
 
-# Restore backups if desired
+# Restore backup if desired
 mv ~/.claude/skills.backup.YYYY-MM-DD-HHMMSS ~/.claude/skills
-mv ~/.claude/commands.backup.YYYY-MM-DD-HHMMSS ~/.claude/commands
+
+# Remove from CLAUDE.md
+# Delete the "Skills Library" section from ~/.claude/CLAUDE.md
 
 # Remove cloned repo
-rm -rf /path/to/clank
+rm -rf ~/.clank/clank
 ```
 
 ## Implementation

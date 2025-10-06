@@ -12,23 +12,13 @@ validate_clank_repo() {
   if [[ ! -d "skills/meta/installing-skills" ]]; then
     echo -e "${RED}Error: Not running from clank repository root${NC}"
     echo ""
-    echo "This script must be run from the clank repository root directory."
+    echo "Expected to be run from ~/.clank/clank/"
     echo ""
-    echo "To install clank:"
-    echo "  1. Fork and clone:"
-    echo "     ${GREEN}gh repo fork obra/clank --clone${NC}"
-    echo ""
-    echo "  2. Change to clank directory:"
-    echo "     ${GREEN}cd clank${NC}"
-    echo ""
-    echo "  3. Run installer:"
-    echo "     ${GREEN}./skills/meta/installing-skills/install.sh${NC}"
-    echo ""
-    echo "Or without GitHub CLI:"
-    echo "  1. Fork https://github.com/obra/clank via web UI"
-    echo "  2. Clone: ${GREEN}git clone https://github.com/YOUR_USERNAME/clank.git${NC}"
-    echo "  3. ${GREEN}cd clank${NC}"
-    echo "  4. ${GREEN}./skills/meta/installing-skills/install.sh${NC}"
+    echo "To install clank, clone to ~/.clank first:"
+    echo "  ${GREEN}mkdir -p ~/.clank && cd ~/.clank${NC}"
+    echo "  ${GREEN}gh repo fork obra/clank --clone${NC}"
+    echo "  ${GREEN}cd clank${NC}"
+    echo "  ${GREEN}./skills/meta/installing-skills/install.sh${NC}"
     exit 1
   fi
 }
@@ -60,22 +50,7 @@ backup_existing_skills() {
   fi
 }
 
-# Backup existing commands directory if it exists
-backup_existing_commands() {
-  local commands_dir="$HOME/.claude/commands"
-
-  if [[ -e "$commands_dir" ]]; then
-    local timestamp=$(date +%Y-%m-%d-%H%M%S)
-    local backup_path="${commands_dir}.backup.${timestamp}"
-
-    echo -e "${YELLOW}Found existing ~/.claude/commands${NC}"
-    echo -e "Backing up to: ${backup_path}"
-
-    mv "$commands_dir" "$backup_path"
-    echo -e "${GREEN}✓${NC} Backup created"
-    echo ""
-  fi
-}
+# No need to backup commands - we symlink individual files
 
 # Create skills symlink
 create_symlink() {
@@ -94,8 +69,8 @@ create_symlink() {
   echo ""
 }
 
-# Create commands symlink
-create_commands_symlink() {
+# Symlink individual commands
+symlink_commands() {
   local repo_path="$1"
   local commands_source="${repo_path}/commands"
   local commands_target="$HOME/.claude/commands"
@@ -107,11 +82,21 @@ create_commands_symlink() {
     return
   fi
 
-  echo "Creating commands symlink:"
-  echo "  ${commands_target} → ${commands_source}"
+  # Ensure ~/.claude/commands exists
+  mkdir -p "$commands_target"
 
-  ln -s "$commands_source" "$commands_target"
-  echo -e "${GREEN}✓${NC} Commands symlink created"
+  echo "Symlinking commands:"
+
+  # Symlink each command file
+  for cmd in "$commands_source"/*.md; do
+    if [[ -f "$cmd" && "$(basename "$cmd")" != "README.md" ]]; then
+      cmd_name=$(basename "$cmd")
+      ln -sf "$cmd" "$commands_target/$cmd_name"
+      echo "  ${cmd_name}"
+    fi
+  done
+
+  echo -e "${GREEN}✓${NC} Commands symlinked"
   echo ""
 }
 
@@ -151,9 +136,12 @@ verify_installation() {
 
   echo -e "${GREEN}✓${NC} Skills verified"
 
-  # Verify commands (if they exist)
-  if [[ -L "$commands_dir" ]]; then
-    echo -e "${GREEN}✓${NC} Commands verified"
+  # Verify commands were symlinked
+  if [[ -d "$commands_dir" ]]; then
+    cmd_count=$(find "$commands_dir" -type l -name "*.md" 2>/dev/null | wc -l)
+    if [[ $cmd_count -gt 0 ]]; then
+      echo -e "${GREEN}✓${NC} Commands verified ($cmd_count symlinked)"
+    fi
   fi
 
   echo ""
@@ -167,22 +155,28 @@ print_success() {
   echo -e "${GREEN}Installation complete!${NC}"
   echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
   echo ""
+  echo -e "${YELLOW}NEXT STEP: Update ~/.claude/CLAUDE.md${NC}"
+  echo ""
+  echo "Add this section to your CLAUDE.md:"
+  echo ""
+  cat <<'EOF'
+## Skills Library
+
+You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
+
+**RIGHT NOW, go read:** `@~/.claude/skills/getting-started/SKILL.md`
+
+**Before ANY task, run:** `~/.claude/skills/bin/skills-search PATTERN` to find relevant and helpful skills.
+
+**CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.**
+EOF
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
   echo "Verify installation:"
   echo "  ${GREEN}ls -la ~/.claude/skills${NC}"
-  echo "  ${GREEN}ls -la ~/.claude/commands${NC}"
-  echo ""
-  echo "Browse available skills:"
-  echo "  ${GREEN}grep -r 'when_to_use' ~/.claude/skills/ --include='SKILL.md' | head -10${NC}"
-  echo ""
-  echo "Available commands:"
   echo "  ${GREEN}ls ~/.claude/commands/${NC}"
-  echo ""
-  echo "Get started:"
-  echo "  ${GREEN}cat ~/.claude/skills/meta/using-skills/SKILL.md${NC}"
-  echo ""
-  echo "To update later:"
-  echo "  ${GREEN}cd ${repo_path}${NC}"
-  echo "  ${GREEN}git pull origin main${NC}"
+  echo "  ${GREEN}~/.claude/skills/bin/skills-search 'test.*driven'${NC}"
   echo ""
   echo "Repository location: ${repo_path}"
   echo ""
@@ -202,9 +196,8 @@ main() {
   echo ""
 
   backup_existing_skills
-  backup_existing_commands
   create_symlink "$repo_path"
-  create_commands_symlink "$repo_path"
+  symlink_commands "$repo_path"
   verify_tools "$repo_path"
   verify_installation
   print_success "$repo_path"

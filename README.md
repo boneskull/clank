@@ -8,19 +8,29 @@ A comprehensive library of proven techniques, patterns, and tools for Claude AI 
 
 **With GitHub CLI (recommended):**
 ```bash
-gh repo fork obra/clank --clone
+mkdir -p ~/.clank
+cd ~/.clank
+gh repo fork obra/clank --clone --remote-name upstream
 cd clank
 ./skills/meta/installing-skills/install.sh
 ```
 
 **Without GitHub CLI:**
 1. Fork via GitHub web UI
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/clank.git`
-3. `cd clank && ./skills/meta/installing-skills/install.sh`
+2. Clone to ~/.clank:
+   ```bash
+   mkdir -p ~/.clank
+   cd ~/.clank
+   git clone https://github.com/YOUR_USERNAME/clank.git
+   cd clank
+   ./skills/meta/installing-skills/install.sh
+   ```
 
 ### 2. Configure CLAUDE.md
 
-Edit `~/.claude/CLAUDE.md` and add the skills library section from `@skills/meta/installing-skills/SKILL.md` (in the "Configure CLAUDE.md" section).
+The installer will print a snippet to add to `~/.claude/CLAUDE.md`.
+
+Copy that snippet and add it to your CLAUDE.md file.
 
 ### 3. Verify
 
