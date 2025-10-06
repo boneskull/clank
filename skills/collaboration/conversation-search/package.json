@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@xenova/transformers": "^2.17.2",
     "better-sqlite3": "^12.4.1",
