@@ -13,7 +13,7 @@ Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skill
 
 **When your human partner wants to start a project, no matter how big or small:**
 
-**YOU MUST immediately use:** `@skills/collaboration/brainstorming/SKILL.md`
+**YOU MUST immediately use:** @skills/collaboration/brainstorming/SKILL.md
 
 **Don't:**
 - Jump straight to code
@@ -33,7 +33,7 @@ The tool uses grep patterns:
 ~/.claude/skills/getting-started/skills-search 'refactor|extract'
 ```
 
-**Output:** `@skills/path/SKILL.md - description`
+**Output:** @skills/path/SKILL.md - description
 
 **If skills found:**
 1. READ them completely (don't skim)
@@ -98,9 +98,9 @@ The skill itself tells you which type it is.
 
 ## Creating Skills
 
-Found something valuable? `@skills/meta/creating-skills/SKILL.md`
+Found something valuable? See @skills/meta/creating-skills/SKILL.md
 
-Want a skill that doesn't exist? Edit `@skills/REQUESTS.md`
+Want a skill that doesn't exist? Edit @skills/REQUESTS.md
 
 ## Summary
 
