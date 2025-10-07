@@ -15,7 +15,7 @@ async function callClaude(prompt: string, useSonnet = false): Promise<string> {
     options: {
       model,
       maxTokens: 4096,
-      systemPrompt: 'You are a technical reporter. Write concise, factual summaries. Do not use skills, workflows, or special behaviors - just summarize.'
+      systemPrompt: 'Write concise, factual summaries. Output ONLY the summary - no preamble, no "Here is", no "I will". Your output will be indexed directly.'
     }
   })) {
     if (message && typeof message === 'object' && 'type' in message && message.type === 'result') {
@@ -61,7 +61,7 @@ export async function summarizeConversation(exchanges: ConversationExchange[]): 
   // For short conversations (≤15 exchanges), summarize directly
   if (exchanges.length <= 15) {
     const conversationText = formatConversationText(exchanges);
-    const prompt = `Summarize this conversation in one paragraph (150 words max): what was requested, what was done, notable insights.
+    const prompt = `One paragraph summary (150 words max): what was requested, what was done, notable insights. No preamble - output goes directly to index.
 
 ${conversationText}`;
 
@@ -79,7 +79,7 @@ ${conversationText}`;
   const chunkSummaries: string[] = [];
   for (let i = 0; i < chunks.length; i++) {
     const chunkText = formatConversationText(chunks[i]);
-    const prompt = `Summarize this part in 3-4 sentences:
+    const prompt = `3-4 sentences summarizing this part. No preamble.
 
 ${chunkText}`;
 
@@ -97,8 +97,9 @@ ${chunkText}`;
   }
 
   // Synthesize chunks into final summary
-  const synthesisPrompt = `Synthesize these part summaries into one paragraph (200 words max) covering the goal, what was accomplished, and key challenges:
+  const synthesisPrompt = `One paragraph (200 words max) synthesizing the goal, what was accomplished, and key challenges. No preamble - output goes directly to index.
 
+Part summaries:
 ${chunkSummaries.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
 
   console.log(`  Synthesizing final summary...`);
