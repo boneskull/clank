@@ -7,6 +7,15 @@ export function formatConversationText(exchanges: ConversationExchange[]): strin
   }).join('\n\n---\n\n');
 }
 
+function extractSummary(text: string): string {
+  const match = text.match(/<summary>(.*?)<\/summary>/s);
+  if (match) {
+    return match[1].trim();
+  }
+  // Fallback if no tags found
+  return text.trim();
+}
+
 async function callClaude(prompt: string, useSonnet = false): Promise<string> {
   const model = useSonnet ? 'sonnet' : 'haiku';
 
@@ -15,6 +24,7 @@ async function callClaude(prompt: string, useSonnet = false): Promise<string> {
     options: {
       model,
       maxTokens: 4096,
+      maxThinkingTokens: 0,  // Disable extended thinking
       systemPrompt: 'Write concise, factual summaries. Output ONLY the summary - no preamble, no "Here is", no "I will". Your output will be indexed directly.'
     }
   })) {
@@ -61,11 +71,20 @@ export async function summarizeConversation(exchanges: ConversationExchange[]): 
   // For short conversations (≤15 exchanges), summarize directly
   if (exchanges.length <= 15) {
     const conversationText = formatConversationText(exchanges);
-    const prompt = `One paragraph summary (150 words max): what was requested, what was done, notable insights. No preamble - output goes directly to index.
+    const prompt = `Summarize this conversation in one paragraph. Put your summary in <summary></summary> tags.
+
+Good example:
+<summary>The user requested help implementing authentication in a React app. We added JWT-based auth with refresh tokens, implemented protected routes, and fixed a token expiration bug. Key challenge was handling token refresh during ongoing requests.</summary>
+
+Bad example:
+<summary>Here's a summary of the conversation: The conversation was about authentication...</summary>
+
+Your turn - be direct, factual, concise (150 words max):
 
 ${conversationText}`;
 
-    return await callClaude(prompt);
+    const result = await callClaude(prompt);
+    return extractSummary(result);
   }
 
   // For long conversations, use hierarchical summarization
@@ -79,14 +98,17 @@ ${conversationText}`;
   const chunkSummaries: string[] = [];
   for (let i = 0; i < chunks.length; i++) {
     const chunkText = formatConversationText(chunks[i]);
-    const prompt = `3-4 sentences summarizing this part. No preamble.
+    const prompt = `Summarize this part in 3-4 sentences. Use <summary></summary> tags.
 
-${chunkText}`;
+${chunkText}
+
+Example: <summary>User asked about X. We implemented Y using Z library. Hit issue with A, fixed by B.</summary>`;
 
     try {
       const summary = await callClaude(prompt);
-      chunkSummaries.push(summary);
-      console.log(`  Chunk ${i + 1}/${chunks.length}: ${summary.split(/\s+/).length} words`);
+      const extracted = extractSummary(summary);
+      chunkSummaries.push(extracted);
+      console.log(`  Chunk ${i + 1}/${chunks.length}: ${extracted.split(/\s+/).length} words`);
     } catch (error) {
       console.log(`  Chunk ${i + 1} failed, skipping`);
     }
@@ -97,22 +119,23 @@ ${chunkText}`;
   }
 
   // Synthesize chunks into final summary
-  const synthesisPrompt = `These are summaries of parts of one conversation. Write one cohesive paragraph (200 words max) about the overall goal, what was accomplished, and key challenges.
+  const synthesisPrompt = `These are summaries from parts of one long conversation. Write one cohesive paragraph covering the overall goal, what was accomplished, and key challenges. Use <summary></summary> tags.
 
-${chunkSummaries.map((s, i) => `Part ${i + 1}: ${s}`).join('\n\n')}
+Part summaries:
+${chunkSummaries.map((s, i) => `${i + 1}. ${s}`).join('\n\n')}
 
-Output ONLY the final summary paragraph. No meta-commentary.`;
+Good example:
+<summary>The user wanted to build a conversation search system. We implemented JavaScript-based indexing with local embeddings and sqlite-vec for vector search. Main challenge was handling long conversations via hierarchical summarization. Final system archives conversations and enables semantic search.</summary>
+
+Bad example:
+<summary>Here's a synthesis of the parts: The conversation covered several topics...</summary>
+
+Your turn (200 words max):`;
 
   console.log(`  Synthesizing final summary...`);
   try {
-    let result = await callClaude(synthesisPrompt);
-
-    // Strip common preambles if present
-    result = result.replace(/^(Here'?s? ?(a|the)? ?(synthesized? )?summary:?\s*)/i, '');
-    result = result.replace(/^(The summary provides?:?\s*)/i, '');
-    result = result.replace(/^(I'?ll synthesize:?\s*)/i, '');
-
-    return result.trim();
+    const result = await callClaude(synthesisPrompt);
+    return extractSummary(result);
   } catch (error) {
     console.log(`  Synthesis failed, using chunk summaries`);
     return chunkSummaries.join(' ');
