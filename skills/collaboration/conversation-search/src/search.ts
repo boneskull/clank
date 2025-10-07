@@ -2,40 +2,94 @@ import Database from 'better-sqlite3';
 import { initDatabase } from './db.js';
 import { initEmbeddings, generateEmbedding } from './embeddings.js';
 import { SearchResult, ConversationExchange } from './types.js';
+import fs from 'fs';
+
+export interface SearchOptions {
+  limit?: number;
+  mode?: 'vector' | 'text' | 'both';
+  after?: string;  // ISO date string
+  before?: string; // ISO date string
+}
 
 export async function searchConversations(
   query: string,
-  limit: number = 10
+  options: SearchOptions = {}
 ): Promise<SearchResult[]> {
+  const { limit = 10, mode = 'vector', after, before } = options;
   const db = initDatabase();
 
-  // Generate query embedding
-  await initEmbeddings();
-  const queryEmbedding = await generateEmbedding(query);
+  let results: any[] = [];
 
-  // Search using vector similarity
-  const stmt = db.prepare(`
-    SELECT
-      e.id,
-      e.project,
-      e.timestamp,
-      e.user_message,
-      e.assistant_message,
-      e.archive_path,
-      e.line_start,
-      e.line_end,
-      vec.distance
-    FROM vec_exchanges AS vec
-    JOIN exchanges AS e ON vec.id = e.id
-    WHERE vec.embedding MATCH ?
-      AND k = ?
-    ORDER BY vec.distance ASC
-  `);
+  // Build time filter clause
+  const timeFilter = [];
+  if (after) timeFilter.push(`e.timestamp >= '${after}'`);
+  if (before) timeFilter.push(`e.timestamp <= '${before}'`);
+  const timeClause = timeFilter.length > 0 ? `AND ${timeFilter.join(' AND ')}` : '';
 
-  const results = stmt.all(
-    Buffer.from(new Float32Array(queryEmbedding).buffer),
-    limit
-  );
+  if (mode === 'vector' || mode === 'both') {
+    // Vector similarity search
+    await initEmbeddings();
+    const queryEmbedding = await generateEmbedding(query);
+
+    const stmt = db.prepare(`
+      SELECT
+        e.id,
+        e.project,
+        e.timestamp,
+        e.user_message,
+        e.assistant_message,
+        e.archive_path,
+        e.line_start,
+        e.line_end,
+        vec.distance
+      FROM vec_exchanges AS vec
+      JOIN exchanges AS e ON vec.id = e.id
+      WHERE vec.embedding MATCH ?
+        AND k = ?
+        ${timeClause}
+      ORDER BY vec.distance ASC
+    `);
+
+    results = stmt.all(
+      Buffer.from(new Float32Array(queryEmbedding).buffer),
+      limit
+    );
+  }
+
+  if (mode === 'text' || mode === 'both') {
+    // Text search
+    const textStmt = db.prepare(`
+      SELECT
+        e.id,
+        e.project,
+        e.timestamp,
+        e.user_message,
+        e.assistant_message,
+        e.archive_path,
+        e.line_start,
+        e.line_end,
+        0 as distance
+      FROM exchanges AS e
+      WHERE (e.user_message LIKE ? OR e.assistant_message LIKE ?)
+        ${timeClause}
+      ORDER BY e.timestamp DESC
+      LIMIT ?
+    `);
+
+    const textResults = textStmt.all(`%${query}%`, `%${query}%`, limit);
+
+    if (mode === 'both') {
+      // Merge and deduplicate by ID
+      const seenIds = new Set(results.map(r => r.id));
+      for (const textResult of textResults) {
+        if (!seenIds.has(textResult.id)) {
+          results.push(textResult);
+        }
+      }
+    } else {
+      results = textResults;
+    }
+  }
 
   db.close();
 
@@ -51,19 +105,27 @@ export async function searchConversations(
       lineEnd: row.line_end
     };
 
+    // Try to load summary if available
+    const summaryPath = row.archive_path.replace('.jsonl', '-summary.txt');
+    let summary: string | undefined;
+    if (fs.existsSync(summaryPath)) {
+      summary = fs.readFileSync(summaryPath, 'utf-8').trim();
+    }
+
     // Create snippet (first 200 chars)
     const snippet = exchange.userMessage.substring(0, 200) +
       (exchange.userMessage.length > 200 ? '...' : '');
 
     return {
       exchange,
-      similarity: 1 - row.distance, // Convert distance to similarity
-      snippet
-    };
+      similarity: mode === 'text' ? undefined : 1 - row.distance,
+      snippet,
+      summary
+    } as SearchResult & { summary?: string };
   });
 }
 
-export function formatResults(results: SearchResult[]): string {
+export function formatResults(results: Array<SearchResult & { summary?: string }>): string {
   if (results.length === 0) {
     return 'No results found.';
   }
@@ -73,9 +135,21 @@ export function formatResults(results: SearchResult[]): string {
   results.forEach((result, index) => {
     const date = new Date(result.exchange.timestamp).toISOString().split('T')[0];
     output += `${index + 1}. [${result.exchange.project}, ${date}]\n`;
-    output += `   "${result.snippet}"\n`;
+
+    // Show summary if available, otherwise snippet
+    if (result.summary) {
+      output += `   ${result.summary}\n`;
+    } else {
+      output += `   "${result.snippet}"\n`;
+    }
+
     output += `   File: ${result.exchange.archivePath}:${result.exchange.lineStart}-${result.exchange.lineEnd}\n`;
-    output += `   Similarity: ${(result.similarity * 100).toFixed(1)}%\n\n`;
+
+    if (result.similarity !== undefined) {
+      output += `   Similarity: ${(result.similarity * 100).toFixed(1)}%\n`;
+    }
+
+    output += '\n';
   });
 
   return output;

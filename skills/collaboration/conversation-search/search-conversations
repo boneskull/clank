@@ -1,10 +1,59 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-if [ $# -eq 0 ]; then
-  echo "Usage: search-conversations <query>"
+# Parse arguments
+MODE="vector"
+AFTER=""
+BEFORE=""
+LIMIT="10"
+QUERY=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --text)
+      MODE="text"
+      shift
+      ;;
+    --both)
+      MODE="both"
+      shift
+      ;;
+    --after)
+      AFTER="$2"
+      shift 2
+      ;;
+    --before)
+      BEFORE="$2"
+      shift 2
+      ;;
+    --limit)
+      LIMIT="$2"
+      shift 2
+      ;;
+    *)
+      QUERY="$QUERY $1"
+      shift
+      ;;
+  esac
+done
+
+QUERY=$(echo "$QUERY" | sed 's/^ *//')
+
+if [ -z "$QUERY" ]; then
+  echo "Usage: search-conversations [options] <query>"
+  echo ""
+  echo "Options:"
+  echo "  --text          Text search instead of vector similarity"
+  echo "  --both          Both vector and text search"
+  echo "  --after DATE    Only show conversations after date (YYYY-MM-DD)"
+  echo "  --before DATE   Only show conversations before date (YYYY-MM-DD)"
+  echo "  --limit N       Max results (default: 10)"
+  echo ""
+  echo "Examples:"
+  echo "  search-conversations \"authentication errors\""
+  echo "  search-conversations --text \"a1b2c3d\""
+  echo "  search-conversations --after 2025-10-01 \"React Router\""
   exit 1
 fi
 
-QUERY="$*"
-npx tsx src/search-cli.ts "$QUERY"
+npx tsx src/search-cli.ts "$QUERY" "$MODE" "$LIMIT" "$AFTER" "$BEFORE"
