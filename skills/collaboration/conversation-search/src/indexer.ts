@@ -4,6 +4,7 @@ import os from 'os';
 import { initDatabase, insertExchange } from './db.js';
 import { parseConversation } from './parser.js';
 import { initEmbeddings, generateExchangeEmbedding } from './embeddings.js';
+import { summarizeConversation } from './summarizer.js';
 import { ConversationExchange } from './types.js';
 
 const PROJECTS_DIR = path.join(os.homedir(), '.claude', 'projects');
@@ -66,6 +67,18 @@ export async function indexConversations(limitToProject?: string): Promise<void>
       if (exchanges.length === 0) {
         console.log(`  Skipped ${file} (no exchanges)`);
         continue;
+      }
+
+      // Generate and save summary
+      const summaryPath = archivePath.replace('.jsonl', '-summary.txt');
+      if (!fs.existsSync(summaryPath)) {
+        try {
+          const summary = await summarizeConversation(exchanges);
+          fs.writeFileSync(summaryPath, summary, 'utf-8');
+          console.log(`  Summary: ${summary.split(/\s+/).length} words`);
+        } catch (error) {
+          console.log(`  Summary failed: ${error}`);
+        }
       }
 
       // Generate embeddings and insert
