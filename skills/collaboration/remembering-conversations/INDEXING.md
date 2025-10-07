@@ -1,17 +1,17 @@
-# Conversation Search
+# Managing Conversation Index
 
-Search and archive Claude Code conversations with semantic search and AI-generated summaries.
+How to index, archive, and maintain conversations for search.
 
 ## Quick Start
 
 **Index all conversations:**
 ```bash
-./index-conversations
+~/.claude/skills/collaboration/remembering-conversations/tool/index-conversations
 ```
 
-**Search:**
+**Process unindexed only:**
 ```bash
-./search-conversations "your query"
+~/.claude/skills/collaboration/remembering-conversations/tool/index-conversations --cleanup
 ```
 
 ## Features

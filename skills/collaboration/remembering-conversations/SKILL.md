@@ -1,19 +1,21 @@
 ---
-name: Conversation Search
-description: Search previous Claude Code conversations for facts, patterns, decisions, and context
-when_to_use: When you need information from previous conversations. When Jesse mentions "we discussed this before". When debugging similar issues. When trying to remember architectural decisions. When looking for code patterns used previously. Before reinventing solutions.
+name: Remembering Conversations
+description: Search previous Claude Code conversations for facts, patterns, decisions, and context using semantic or text search
+when_to_use: When Jesse mentions "we discussed this before". When debugging similar issues. When looking for architectural decisions or code patterns from past work. Before reinventing solutions. When you need to find a specific git SHA or error message.
 version: 1.0.0
 ---
 
-# Conversation Search
+# Remembering Conversations
 
 ## Overview
 
-Search through all previous Claude Code conversations using semantic search. Find facts, patterns, approaches, and decisions from past work.
+Search archived conversations using semantic similarity or exact text matching. Find facts, patterns, approaches, and decisions from past work.
 
-**Core principle:** Don't reinvent what's already been solved. Search before implementing.
+**Core principle:** Search before reinventing.
 
 **Announce when using:** "I'm searching previous conversations for [topic]."
+
+**For indexing/setup:** See INDEXING.md
 
 ## When to Use
 
@@ -34,7 +36,7 @@ Search through all previous Claude Code conversations using semantic search. Fin
 
 **Basic search:**
 ```bash
-search-conversations "your query"
+~/.claude/skills/collaboration/remembering-conversations/tool/search-conversations "your query"
 ```
 
 **Search modes:**
@@ -126,41 +128,13 @@ Found it! We implemented a Redis-based rate limiter using...
 [Explain the solution found]
 ```
 
-## Indexing New Conversations
+## Managing the Index
 
-**To index new conversations:**
-```bash
-~/.claude/skills/collaboration/conversation-search/index-conversations
-```
-
-**When to re-index:**
-- After major work sessions (daily/weekly)
-- When Jesse asks about recent conversations
-- Manually triggered (not automated yet)
-
-**What indexing does:**
-1. Scans `~/.claude/projects/` for new `.jsonl` files
-2. Archives them to `~/.clank/conversation-archive/`
-3. Generates embeddings for searchability
-4. Updates SQLite vector database
-
-## Limitations
-
-**Conversation search cannot:**
-- Search current conversation (use context instead)
-- Find code in current codebase (use Grep/Glob)
-- See conversations not yet indexed (run indexer)
-- Access expired conversations unless archived
-
-**Quality depends on:**
-- How well conversations were documented
-- Specificity of your search query
-- Whether similar topics were discussed before
+For indexing, archiving, and managing conversations, see **INDEXING.md** in this directory.
 
 ## Remember
 
 - Search before reinventing
 - Combine with journal for best results
-- Read full context when snippet isn't enough
-- Re-index periodically to include recent conversations
+- Read full context when needed
 - Announce when you search (transparency)

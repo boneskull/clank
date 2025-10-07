@@ -138,19 +138,18 @@ export function formatResults(results: Array<SearchResult & { summary?: string }
 
     // Show conversation summary if available
     if (result.summary) {
-      output += `   Summary: ${result.summary}\n`;
+      output += `   ${result.summary}\n\n`;
     }
 
-    // Always show the matched exchange snippet
-    output += `   Match: "${result.snippet}"\n`;
-
-    output += `   File: ${result.exchange.archivePath}:${result.exchange.lineStart}-${result.exchange.lineEnd}\n`;
-
+    // Show match with similarity percentage
     if (result.similarity !== undefined) {
-      output += `   Similarity: ${(result.similarity * 100).toFixed(1)}%\n`;
+      const pct = Math.round(result.similarity * 100);
+      output += `   ${pct}% match: "${result.snippet}"\n`;
+    } else {
+      output += `   Match: "${result.snippet}"\n`;
     }
 
-    output += '\n';
+    output += `   ${result.exchange.archivePath}:${result.exchange.lineStart}-${result.exchange.lineEnd}\n\n`;
   });
 
   return output;
