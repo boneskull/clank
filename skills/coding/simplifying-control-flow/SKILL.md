@@ -124,6 +124,6 @@ From baseline:
 
 ## Integration with Other Skills
 
-**For complex functions:** See @skills/keeping-routines-focused/SKILL.md - extract when nesting gets deep
+**For complex functions:** See skills/keeping-routines-focused - extract when nesting gets deep
 
-**For reducing complexity:** See @skills/architecture/reducing-complexity/SKILL.md - simpler control flow = less complexity
+**For reducing complexity:** See skills/architecture/reducing-complexity - simpler control flow = less complexity

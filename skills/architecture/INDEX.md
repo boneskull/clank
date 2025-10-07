@@ -4,11 +4,11 @@ Patterns for designing systems and data structures.
 
 ## Available Skills
 
-- @reducing-complexity/SKILL.md - Managing complexity is software's primary technical imperative - all other goals are secondary. Use before and during any design or implementation, when solution feels complicated, when code is hard to understand, when complexity is proliferating.
+- skills/architecture/reducing-complexity - Managing complexity is software's primary technical imperative - all other goals are secondary. Use before and during any design or implementation, when solution feels complicated, when code is hard to understand, when complexity is proliferating.
 
-- @encapsulating-complexity/SKILL.md - Hide implementation details behind interfaces - work at domain level (what), not implementation level (how). Use when designing any class or interface, when implementation details leak into public API, when storage format is exposed, when working with raw data structures instead of domain objects, when changing implementation would break client code.
+- skills/architecture/encapsulating-complexity - Hide implementation details behind interfaces - work at domain level (what), not implementation level (how). Use when designing any class or interface, when implementation details leak into public API, when storage format is exposed, when working with raw data structures instead of domain objects, when changing implementation would break client code.
 
-- @maintaining-consistent-abstractions/SKILL.md - Class interfaces present one cohesive abstraction - don't mix domain logic with serialization, persistence, or unrelated concerns. Use when designing any class interface, when class has mixed responsibilities, when domain object knows about JSON/database, when temporal cohesion exists (grouped by when not what), when creating utility/grab-bag classes.
+- skills/architecture/maintaining-consistent-abstractions - Class interfaces present one cohesive abstraction - don't mix domain logic with serialization, persistence, or unrelated concerns. Use when designing any class interface, when class has mixed responsibilities, when domain object knows about JSON/database, when temporal cohesion exists (grouped by when not what), when creating utility/grab-bag classes.
 
 ## Core Principles
 

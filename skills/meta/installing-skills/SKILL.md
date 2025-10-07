@@ -53,7 +53,7 @@ Use the Edit tool to add this XML section to the very beginning of `~/.claude/CL
 <EXTREMELY_IMPORTANT>
 You have a personal skills wiki at ~/.claude/skills/ with proven techniques, patterns, and tools that give you new capabilities.
 
-STOP. Before doing ANYTHING else in this conversation, read this file: @skills/getting-started/SKILL.md
+STOP. Before doing ANYTHING else in this conversation, read this file: skills/getting-started
 
 That file tells you how to find and use your skills.
 
@@ -128,7 +128,7 @@ ls -la ~/.claude/commands/
 
 Forking lets you:
 - **Customize** skills and commands for your workflow
-- **Contribute** improvements back via PR (see @skills/contributing-skills/SKILL.md)
+- **Contribute** improvements back via PR (see skills/contributing-skills)
 - **Stay synced** with upstream updates (`git pull upstream main`)
 - **Track** your customizations in version control
 
@@ -140,7 +140,7 @@ After installation, edit your `~/.claude/CLAUDE.md` and add this section:
 <extremely_important_skills_library>
 You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
 
-STOP. Before doing ANYTHING else in this conversation, read this file: `@~/.claude/skills/getting-started/SKILL.md`
+STOP. Before doing ANYTHING else in this conversation, read this file: `skills/getting-started`
 
 That file tells you:
 - Which phrases trigger brainstorming automatically (like "I've got an idea", "Let's make...")

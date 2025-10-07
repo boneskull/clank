@@ -4,7 +4,7 @@ Your personal wiki of proven techniques, patterns, and tools.
 
 ## First Time Here?
 
-**Read this first:** @getting-started/SKILL.md - Introduction to the skills library and how to use it
+**Read this first:** skills/getting-started - Introduction to the skills library and how to use it
 
 ## Quick Start
 
@@ -14,12 +14,12 @@ Your personal wiki of proven techniques, patterns, and tools.
 
 ## Categories
 
-- @coding/INDEX.md - Core software engineering practices (naming, comments)
-- @testing/INDEX.md - Writing reliable, maintainable tests
-- @debugging/INDEX.md - Finding and fixing bugs systematically
-- @architecture/INDEX.md - Designing systems and data structures
-- @collaboration/INDEX.md - Working with other agents and developers
-- @meta/INDEX.md - Using and creating skills
+- skills/coding - Core software engineering practices (naming, comments)
+- skills/testing - Writing reliable, maintainable tests
+- skills/debugging - Finding and fixing bugs systematically
+- skills/architecture - Designing systems and data structures
+- skills/collaboration - Working with other agents and developers
+- skills/meta - Using and creating skills
 
 ## Navigation
 
@@ -27,4 +27,4 @@ Each category INDEX shows available skills with descriptions. Load the category 
 
 ## Creating New Skills
 
-See @meta/creating-skills/SKILL.md for guidelines on documenting new techniques.
+See skills/meta/creating-skills for guidelines on documenting new techniques.

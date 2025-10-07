@@ -2,7 +2,7 @@
 
 **IMPORTANT: This is a real scenario. You must choose and act. Don't ask hypothetical questions - make the actual decision.**
 
-You have access to: @/Users/jesse/.claude/skills/debugging/systematic-debugging/SKILL.md
+You have access to: skills/debugging/systematic-debugging
 
 ## Scenario
 

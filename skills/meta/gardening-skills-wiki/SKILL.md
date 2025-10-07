@@ -49,16 +49,16 @@ The master script runs all checks and provides a health report.
 ### 1. Link Validation (`check-links.sh`)
 
 **Checks:**
-- Backtick-wrapped `@` links (`` `@path/SKILL.md` ``) - disables resolution
-- Relative paths (`@../` or `@~/`) - should use `@skills/` absolute paths
-- All `@skills/` references resolve to existing files
+- Backtick-wrapped `@` links - backticks disable resolution
+- Relative paths like skills/ or skills/gardening-skills-wiki/~/ - should use skills/ absolute paths
+- All `skills/` references resolve to existing files
 - Skills referenced in INDEX files exist
 - Orphaned skills (not in any INDEX)
 
 **Fixes:**
-- Remove backticks: `` `@skills/path/SKILL.md` `` → `@skills/path/SKILL.md`
-- Convert relative to absolute: `@../testing/SKILL.md` → `@skills/testing/SKILL.md`
-- Update broken `@` references to correct paths
+- Remove backticks from @ references
+- Convert skills/ and skills/gardening-skills-wiki/~/ relative paths to skills/ absolute paths
+- Update broken skills/ references to correct paths
 - Add orphaned skills to their category INDEX
 - Remove references to deleted skills
 
@@ -94,7 +94,7 @@ The master script runs all checks and provides a health report.
 ### Broken Links
 
 ```
-❌ BROKEN: @skills/debugging/root-cause-tracing/SKILL.md
+❌ BROKEN: skills/debugging/root-cause-tracing
    Target: /path/to/skills/debugging/root-cause-tracing/SKILL.md
 ```
 
@@ -109,13 +109,13 @@ The master script runs all checks and provides a health report.
 **Fix:** Add to the category INDEX:
 
 ```markdown
-- @test-invariants/SKILL.md - Description of skill
+- skills/gardening-skills-wiki/test-invariants - Description of skill
 ```
 
 ### Backtick-Wrapped Links
 
 ```
-❌ BACKTICKED: @skills/testing/condition-based-waiting/SKILL.md on line 31
+❌ BACKTICKED: skills/testing/condition-based-waiting on line 31
    File: getting-started/SKILL.md
    Fix: Remove backticks - use bare @ reference
 ```
@@ -124,27 +124,27 @@ The master script runs all checks and provides a health report.
 
 ```markdown
 # ❌ Bad - backticks disable link resolution
-`@skills/testing/condition-based-waiting/SKILL.md`
+`skills/testing/condition-based-waiting`
 
 # ✅ Good - bare @ reference
-@skills/testing/condition-based-waiting/SKILL.md
+skills/testing/condition-based-waiting
 ```
 
 ### Relative Path Links
 
 ```
-❌ RELATIVE: @../testing/SKILL.md in coding/SKILL.md
-   Fix: Use @skills/ absolute path instead
+❌ RELATIVE: skills/testing in coding/SKILL.md
+   Fix: Use skills/ absolute path instead
 ```
 
 **Fix:** Convert to absolute path:
 
 ```markdown
 # ❌ Bad - relative paths are brittle
-@../testing/condition-based-waiting/SKILL.md
+skills/testing/condition-based-waiting
 
-# ✅ Good - absolute @skills/ path
-@skills/testing/condition-based-waiting/SKILL.md
+# ✅ Good - absolute skills/ path
+skills/testing/condition-based-waiting
 ```
 
 ### Naming Issues
@@ -172,7 +172,7 @@ mv TestingPatterns testing-patterns
 ```markdown
 ## Available Skills
 
-- @condition-based-waiting/SKILL.md - Replace timeouts with condition polling
+- skills/gardening-skills-wiki/condition-based-waiting - Replace timeouts with condition polling
 ```
 
 ### Empty Directories
@@ -234,7 +234,7 @@ vim ~/.claude/skills/category/INDEX.md
 mv ~/.claude/skills/old-category/skill ~/.claude/skills/new-category/
 
 # 2. Update all references (grep for old paths)
-grep -r "@old-category/skill" ~/.claude/skills/
+grep -r "skills/gardening-skills-wiki/old-category/skill" ~/.claude/skills/
 
 # 3. Run health check
 ~/.claude/skills/meta/gardening-skills-wiki/garden.sh
@@ -270,7 +270,7 @@ Validates all `@` references and cross-links.
 
 **Checks:**
 - Backtick-wrapped `@` links (disables resolution)
-- Relative paths (`@../` or `@~/`) - should be `@skills/`
+- Relative paths (`skills/` or `skills/gardening-skills-wiki/~/`) - should be `skills/`
 - `@` reference resolution to existing files
 - Skills in INDEX files exist
 - Orphaned skills detection
@@ -298,7 +298,7 @@ Validates INDEX completeness.
 | Issue | Script | Fix |
 |-------|--------|-----|
 | Backtick-wrapped links | `check-links.sh` | Remove backticks from `@` refs |
-| Relative paths | `check-links.sh` | Convert to `@skills/` absolute |
+| Relative paths | `check-links.sh` | Convert to `skills/` absolute |
 | Broken links | `check-links.sh` | Update `@` references |
 | Orphaned skills | `check-links.sh` | Add to INDEX |
 | Naming issues | `check-naming.sh` | Rename directories |

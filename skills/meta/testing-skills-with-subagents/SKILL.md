@@ -15,7 +15,7 @@ You run scenarios without the skill (RED - watch agent fail), write skill addres
 
 **Core principle:** If you didn't watch an agent fail without the skill, you don't know if the skill prevents the right failures.
 
-See @skills/testing/test-driven-development/SKILL.md for the fundamental cycle. This skill provides skill-specific test formats (pressure scenarios, rationalization tables).
+See skills/testing/test-driven-development for the fundamental cycle. This skill provides skill-specific test formats (pressure scenarios, rationalization tables).
 
 ## When to Use
 
@@ -156,7 +156,7 @@ Forces explicit choice.
 IMPORTANT: This is a real scenario. You must choose and act.
 Don't ask hypothetical questions - make the actual decision.
 
-You have access to: @path/to/skill.md
+You have access to: skills/testing-skills-with-subagents/path/to/skill.md
 ```
 
 Make agent believe it's real work, not a quiz.

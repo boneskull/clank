@@ -1,5 +1,5 @@
 #!/bin/bash
-# Check for broken, invalid, or non-standard links in skills wiki
+# Check for @ links (force-load context) and validate skill path references
 
 SKILLS_DIR="${1:-$HOME/Documents/GitHub/dotfiles/.claude/skills}"
 
@@ -7,6 +7,7 @@ echo "## Links & References"
 broken_refs=0
 backticked_refs=0
 relative_refs=0
+at_links=0
 
 while IFS= read -r file; do
     # Extract @ references - must start line, be after space/paren/dash, or be standalone
@@ -34,59 +35,59 @@ while IFS= read -r file; do
         backticked_refs=$((backticked_refs + 1))
     done
 
-    # Extract @ references for validation
-    grep -E '(^|[ \(>-])@[a-zA-Z0-9._/-]+\.(md|sh|ts|js|py)' "$file" | \
+    # Check for ANY @ links to .md/.sh/.ts/.js/.py files (force-loads, burns context)
+    grep -nE '(^|[ \(>-])@[a-zA-Z0-9._/-]+\.(md|sh|ts|js|py)' "$file" | \
         grep -v '@[a-zA-Z0-9._%+-]*@' | \
         grep -v 'email.*@' | \
-        grep -v '`.*@.*`' | \
-        grep -o '@[a-zA-Z0-9._/-]+\.(md|sh|ts|js|py)' | while read -r ref; do
-        # Remove leading @
+        grep -v '`.*@.*`' | while IFS=: read -r line_num match; do
+
+        ref=$(echo "$match" | grep -o '@[a-zA-Z0-9._/-]+\.(md|sh|ts|js|py)')
         ref_path="${ref#@}"
 
-        # Check for relative paths (should use @skills/ instead)
-        if [[ "$ref_path" == ../* ]] || [[ "$ref_path" == ~/* ]]; then
-            echo "  ❌ RELATIVE: $ref in $(basename $(dirname "$file"))/$(basename "$file")"
-            echo "     Fix: Use @skills/ absolute path instead"
-            relative_refs=$((relative_refs + 1))
+        # Skip if in fenced code block
+        actual_line=$(sed -n "${line_num}p" "$file")
+        if [[ "$actual_line" =~ ^[[:space:]]{4,} ]]; then
             continue
         fi
 
-        # Should start with skills/ for absolute path
+        code_block_count=$(sed -n "1,${line_num}p" "$file" | grep -c '^```')
+        if [ $((code_block_count % 2)) -eq 1 ]; then
+            continue
+        fi
+
+        # Any @ link is wrong - should use skills/path format
+        echo "  ❌ @ LINK: $ref on line $line_num"
+        echo "     File: $(basename $(dirname "$file"))/$(basename "$file")"
+
+        # Suggest correct format
         if [[ "$ref_path" == skills/* ]]; then
-            # Absolute reference - resolve from skills root
-            full_path="$SKILLS_DIR/${ref_path#skills/}"
+            # @skills/category/name/SKILL.md → skills/category/name
+            corrected="${ref_path#skills/}"
+            corrected="${corrected%/SKILL.md}"
+            echo "     Fix: $ref → skills/$corrected"
+        elif [[ "$ref_path" == ../* ]]; then
+            echo "     Fix: Convert to skills/category/skill-name format"
         else
-            # Assume relative to current file's directory
-            file_dir=$(dirname "$file")
-            full_path="$file_dir/$ref_path"
+            echo "     Fix: Convert to skills/category/skill-name format"
         fi
 
-        # Normalize path
-        full_path=$(cd "$(dirname "$full_path")" 2>/dev/null && pwd)/$(basename "$full_path") 2>/dev/null
-
-        # Check if target exists
-        if [[ ! -e "$full_path" ]]; then
-            echo "  ❌ BROKEN: $ref in $(basename $(dirname "$file"))/$(basename "$file")"
-            echo "     Target: $full_path"
-            broken_refs=$((broken_refs + 1))
-        fi
+        at_links=$((at_links + 1))
     done
 done < <(find "$SKILLS_DIR" -type f -name "*.md")
 
 # Summary
-total_issues=$((broken_refs + backticked_refs + relative_refs))
+total_issues=$((backticked_refs + at_links))
 if [ $total_issues -eq 0 ]; then
-    echo "  ✅ All @ references OK"
+    echo "  ✅ All skill references OK"
 else
-    [ $backticked_refs -gt 0 ] && echo "  ❌ $backticked_refs backticked @ links (remove backticks)"
-    [ $relative_refs -gt 0 ] && echo "  ❌ $relative_refs relative paths (use @skills/path instead)"
-    [ $broken_refs -gt 0 ] && echo "  ❌ $broken_refs broken references"
+    [ $backticked_refs -gt 0 ] && echo "  ❌ $backticked_refs backticked references"
+    [ $at_links -gt 0 ] && echo "  ❌ $at_links @ links (force-load context)"
 fi
 
 echo ""
-echo "Correct format: @skills/category/skill-name/SKILL.md"
-echo "  ❌ Bad:  \`@skills/path\` or @../path or @~/path"
-echo "  ✅ Good: @skills/path"
+echo "Correct format: skills/category/skill-name"
+echo "  ❌ Bad:  @skills/path/SKILL.md (force-loads) or @../path (brittle)"
+echo "  ✅ Good: skills/category/skill-name (load with Read tool when needed)"
 
 echo ""
 # Verify all skills mentioned in INDEX files exist

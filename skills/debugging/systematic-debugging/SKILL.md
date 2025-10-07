@@ -114,7 +114,7 @@ You MUST complete each phase before proceeding to the next.
 
    **WHEN error is deep in call stack:**
 
-   See @skills/root-cause-tracing/SKILL.md for backward tracing technique
+   See skills/root-cause-tracing for backward tracing technique
 
    **Quick version:**
    - Where does bad value originate?
@@ -179,7 +179,7 @@ You MUST complete each phase before proceeding to the next.
    - Automated test if possible
    - One-off test script if no framework
    - MUST have before fixing
-   - See @skills/testing/test-driven-development/SKILL.md for writing proper failing tests
+   - See skills/testing/test-driven-development for writing proper failing tests
 
 2. **Implement Single Fix**
    - Address the root cause identified
@@ -281,10 +281,10 @@ If systematic investigation reveals issue is truly environmental, timing-depende
 ## Integration with Other Skills
 
 This skill works with:
-- @skills/root-cause-tracing/SKILL.md - How to trace back through call stack
-- @skills/defense-in-depth/SKILL.md - Add validation after finding root cause
-- @skills/testing/condition-based-waiting/SKILL.md - Replace timeouts identified in Phase 2
-- @skills/verification-before-completion/SKILL.md - Verify fix worked before claiming success
+- skills/root-cause-tracing - How to trace back through call stack
+- skills/defense-in-depth - Add validation after finding root cause
+- skills/testing/condition-based-waiting - Replace timeouts identified in Phase 2
+- skills/verification-before-completion - Verify fix worked before claiming success
 
 ## Real-World Impact
 

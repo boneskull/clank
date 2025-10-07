@@ -467,8 +467,8 @@ From baseline testing:
 
 ## Integration with Other Skills
 
-**For test discipline:** See @skills/testing/test-driven-development/SKILL.md - tests before ANY code change, including refactoring
+**For test discipline:** See skills/testing/test-driven-development - tests before ANY code change, including refactoring
 
-**For bug fixes:** See @skills/debugging/systematic-debugging/SKILL.md - bug fixes require root cause investigation, separate from refactoring
+**For bug fixes:** See skills/debugging/systematic-debugging - bug fixes require root cause investigation, separate from refactoring
 
-**For focused routines:** See @skills/keeping-routines-focused/SKILL.md - extraction is a common refactoring, do it incrementally
+**For focused routines:** See skills/keeping-routines-focused - extraction is a common refactoring, do it incrementally

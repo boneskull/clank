@@ -9,11 +9,24 @@ version: 2.0.0
 
 Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skills/`.
 
+## How to Reference Skills
+
+**DO NOT use @ links** - they force-load entire files, burning 200k+ context instantly.
+
+**INSTEAD, use skill path references:**
+- Format: `skills/category/skill-name` (no @ prefix, no /SKILL.md suffix)
+- Example: `skills/collaboration/brainstorming` or `skills/testing/test-driven-development`
+- Load with Read tool only when needed
+
+**When you see skill references in documentation:**
+- `skills/path/name` → Use Read tool on `~/.claude/skills/path/name/SKILL.md`
+- Load supporting files only when implementing
+
 ## Mandatory Workflow 1: Planning & Building
 
 **When your human partner wants to start a project, no matter how big or small:**
 
-**YOU MUST immediately use:** @skills/collaboration/brainstorming/SKILL.md
+**YOU MUST immediately read:** skills/collaboration/brainstorming
 
 **Don't:**
 - Jump straight to code
@@ -33,10 +46,10 @@ The tool uses grep patterns:
 ~/.claude/skills/getting-started/skills-search 'refactor|extract'
 ```
 
-**Output:** @skills/path/SKILL.md - description
+**Output:** skills/path/skill-name - description
 
 **If skills found:**
-1. READ them completely (don't skim)
+1. READ the skill using Read tool: `~/.claude/skills/path/skill-name/SKILL.md`
 2. ANNOUNCE usage: "I'm using the [Skill Name] skill to [purpose]"
 3. FOLLOW the skill (many are rigid requirements, not suggestions)
 
@@ -76,11 +89,10 @@ The tool uses grep patterns:
 
 ## Navigation
 
-**Categories:** @skills/INDEX.md → testing, debugging, coding, architecture, collaboration, meta
+Really, try skills-search first.
 
+**Categories:** skills/INDEX.md → testing, debugging, coding, architecture, collaboration, meta
 **Individual skill:** Load from category INDEX
-
-**Tool:** See @skills-search implementation
 
 ## How to Read a Skill
 
@@ -96,11 +108,25 @@ The tool uses grep patterns:
 
 The skill itself tells you which type it is.
 
+## Referencing Skills in Documentation
+
+**When writing documentation that references other skills:**
+
+Use path format without `@` prefix or `/SKILL.md` suffix:
+- ✅ Good: `skills/testing/test-driven-development`
+- ✅ Good: `skills/debugging/systematic-debugging`
+- ❌ Bad: `skills/testing/test-driven-development` (force-loads, burns context)
+- ❌ Bad: `skills/testing/test-driven-development` (brittle, force-loads)
+
+**Why no @ links:** `@` syntax force-loads files immediately, consuming 200k+ context before you need them.
+
+**To read a skill reference:** Use Read tool on `~/.claude/skills/category/skill-name/SKILL.md`
+
 ## Creating Skills
 
-Found something valuable? See @skills/meta/creating-skills/SKILL.md
+Found something valuable? See skills/meta/creating-skills
 
-Want a skill that doesn't exist? Edit @skills/REQUESTS.md
+Want a skill that doesn't exist? Edit skills/REQUESTS.md (at ~/.claude/skills/REQUESTS.md)
 
 ## Summary
 
