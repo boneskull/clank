@@ -32,42 +32,68 @@ Search through all previous Claude Code conversations using semantic search. Fin
 
 ## How to Search
 
-**Run:** `~/.claude/skills/collaboration/conversation-search/search-conversations "query"`
-
-**Query tips:**
-- Use natural language: "How did we handle authentication errors?"
-- Be specific: "React Router data loading pattern" vs just "routing"
-- Include context: "TypeScript type narrowing in guards"
-- Combine concepts: "error handling in async functions"
-
-**Example searches:**
+**Basic search:**
 ```bash
-search-conversations "debugging CI signing issues"
-search-conversations "What library did we use for validation?"
-search-conversations "Why did we choose approach X for feature Y?"
-search-conversations "How to test async error handling"
+search-conversations "your query"
 ```
+
+**Search modes:**
+```bash
+# Vector similarity (default) - semantic search
+search-conversations "authentication errors"
+
+# Text search - exact string matching (for git SHAs, error codes, etc.)
+search-conversations --text "a1b2c3d4"
+
+# Both - combines vector and text results
+search-conversations --both "React Router"
+```
+
+**Time filtering:**
+```bash
+# Conversations after a date
+search-conversations --after 2025-10-01 "bug fix"
+
+# Conversations before a date
+search-conversations --before 2025-09-01 "refactoring"
+
+# Date range
+search-conversations --after 2025-08-01 --before 2025-09-01 "feature"
+```
+
+**Other options:**
+```bash
+# Limit results (default: 10)
+search-conversations --limit 20 "testing"
+```
+
+**Query tips for vector search:**
+- Use natural language: "How did we handle authentication errors?"
+- Be specific: "React Router data loading" vs just "routing"
+- Include context: "TypeScript type narrowing in guards"
 
 ## Interpreting Results
 
 **Results show:**
-1. **Project name** - Which codebase the conversation was about
-2. **Date** - When the conversation happened
-3. **Snippet** - First ~200 chars of the user's question
-4. **File location** - Path to archived conversation + line numbers
-5. **Similarity** - How relevant (higher = better match)
-
-**To see full context:**
-- Use Read tool on the file path + line range
-- Or read entire conversation file if needed
+1. **Project name and date** - Which codebase and when
+2. **Conversation summary** - AI-generated overview of what the conversation was about
+3. **Matched exchange** - The specific user/assistant exchange that matched your query
+4. **Similarity percentage** - How relevant (vector search only)
+5. **File location** - Path to archived conversation + line numbers
 
 **Example result:**
 ```
 1. [react-router-7-starter, 2025-09-17]
-   "How do I handle authentication errors in data loaders?"
-   File: ~/.clank/conversation-archive/.../19df92b9.jsonl:145-167
-   Similarity: 87.3%
+   Built authentication system with JWT tokens and refresh logic.
+   Implemented protected routes and fixed token expiration handling.
+
+   92% match: "How do I handle authentication errors in data loaders?"
+   ~/.clank/conversation-archive/.../19df92b9.jsonl:145-167
 ```
+
+**To see full context:**
+- Use Read tool on the file path with line range
+- Or read the entire conversation file
 
 ## Integration with Journal
 
