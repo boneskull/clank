@@ -136,12 +136,13 @@ export function formatResults(results: Array<SearchResult & { summary?: string }
     const date = new Date(result.exchange.timestamp).toISOString().split('T')[0];
     output += `${index + 1}. [${result.exchange.project}, ${date}]\n`;
 
-    // Show summary if available, otherwise snippet
+    // Show conversation summary if available
     if (result.summary) {
-      output += `   ${result.summary}\n`;
-    } else {
-      output += `   "${result.snippet}"\n`;
+      output += `   Summary: ${result.summary}\n`;
     }
+
+    // Always show the matched exchange snippet
+    output += `   Match: "${result.snippet}"\n`;
 
     output += `   File: ${result.exchange.archivePath}:${result.exchange.lineStart}-${result.exchange.lineEnd}\n`;
 
