@@ -16,7 +16,7 @@ You write test cases (pressure scenarios with subagents), watch them fail (basel
 
 **Core principle:** If you didn't watch an agent fail without the skill, you don't know if the skill teaches the right thing.
 
-See @../../../testing/test-driven-development/SKILL.md for the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.
+See @skills/testing/test-driven-development/SKILL.md for the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.
 
 ## What is a Skill?
 
@@ -270,7 +270,7 @@ Write skill before testing? Delete it. Start over.
 - Don't look at it
 - Delete means delete
 
-See @../../../testing/test-driven-development/SKILL.md for why this matters. Same principles apply to documentation.
+See @skills/testing/test-driven-development/SKILL.md for why this matters. Same principles apply to documentation.
 
 ## Testing All Skill Types
 
@@ -432,7 +432,7 @@ Run same scenarios WITH skill. Agent should now comply.
 
 Agent found new rationalization? Add explicit counter. Re-test until bulletproof.
 
-**See @../testing-skills-with-subagents/SKILL.md for:**
+**See @skills/testing-skills-with-subagents/SKILL.md for:**
 - How to write pressure scenarios
 - Pressure types (time, sunk cost, authority, exhaustion)
 - Plugging holes systematically

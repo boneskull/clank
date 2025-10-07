@@ -15,7 +15,7 @@ You run scenarios without the skill (RED - watch agent fail), write skill addres
 
 **Core principle:** If you didn't watch an agent fail without the skill, you don't know if the skill prevents the right failures.
 
-See @../../../testing/test-driven-development/SKILL.md for the fundamental cycle. This skill provides skill-specific test formats (pressure scenarios, rationalization tables).
+See @skills/testing/test-driven-development/SKILL.md for the fundamental cycle. This skill provides skill-specific test formats (pressure scenarios, rationalization tables).
 
 ## When to Use
 

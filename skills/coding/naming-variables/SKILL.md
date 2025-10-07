@@ -341,6 +341,6 @@ Now it's obvious: computing customer bill from balance and new purchases.
 
 ## Integration with Other Skills
 
-**For domain-focused naming:** See @../naming-by-domain/SKILL.md for architectural naming principles (avoid temporal context like "New"/"Improved", avoid implementation details like "ZodValidator", avoid unnecessary pattern names)
+**For domain-focused naming:** See @skills/naming-by-domain/SKILL.md for architectural naming principles (avoid temporal context like "New"/"Improved", avoid implementation details like "ZodValidator", avoid unnecessary pattern names)
 
-**For comment guidelines:** See @../writing-evergreen-comments/SKILL.md for keeping comments evergreen
+**For comment guidelines:** See @skills/writing-evergreen-comments/SKILL.md for keeping comments evergreen

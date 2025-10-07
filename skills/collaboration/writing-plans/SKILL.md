@@ -86,4 +86,4 @@ After saving the plan, tell Jesse:
 
 When Jesse confirms (any affirmative response):
 - Guide them to open a new Claude session in the worktree directory
-- Tell them the new session will use `@../executing-plans/SKILL.md` to implement the plan
+- Tell them the new session will use `@skills/executing-plans/SKILL.md` to implement the plan

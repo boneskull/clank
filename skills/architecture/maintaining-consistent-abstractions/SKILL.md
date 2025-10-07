@@ -422,8 +422,8 @@ From baseline testing:
 
 ## Integration with Other Skills
 
-**For single responsibility:** See @../../coding/keeping-routines-focused/SKILL.md - same principle applies to classes (one clear purpose)
+**For single responsibility:** See @skills/coding/keeping-routines-focused/SKILL.md - same principle applies to classes (one clear purpose)
 
-**For encapsulation:** See @../encapsulating-complexity/SKILL.md - hiding implementation details supports abstraction consistency
+**For encapsulation:** See @skills/encapsulating-complexity/SKILL.md - hiding implementation details supports abstraction consistency
 
-**For complexity:** See @../reducing-complexity/SKILL.md - consistent abstractions reduce mental load
+**For complexity:** See @skills/reducing-complexity/SKILL.md - consistent abstractions reduce mental load

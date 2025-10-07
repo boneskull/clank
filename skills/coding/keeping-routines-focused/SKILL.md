@@ -682,6 +682,6 @@ From baseline testing:
 
 ## Integration with Other Skills
 
-**For extracting during refactoring:** See @../designing-before-coding/SKILL.md - sometimes one pseudocode line explodes to many code lines, indicating need to extract
+**For extracting during refactoring:** See @skills/designing-before-coding/SKILL.md - sometimes one pseudocode line explodes to many code lines, indicating need to extract
 
-**For complexity reduction:** See @../../architecture/reducing-complexity/SKILL.md - focused routines reduce mental juggling required
+**For complexity reduction:** See @skills/architecture/reducing-complexity/SKILL.md - focused routines reduce mental juggling required

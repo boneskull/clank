@@ -50,7 +50,7 @@ The master script runs all checks and provides a health report.
 
 **Checks:**
 - All `@` references resolve to existing files
-- Relative paths (`@../`) work correctly
+- Relative paths (`@skills/`) work correctly
 - Skills referenced in INDEX files exist
 - Orphaned skills (not in any INDEX)
 
@@ -91,7 +91,7 @@ The master script runs all checks and provides a health report.
 ### Broken Links
 
 ```
-❌ BROKEN: @../debugging/root-cause-tracing/SKILL.md
+❌ BROKEN: @skills/debugging/root-cause-tracing/SKILL.md
    Target: /path/to/skills/debugging/root-cause-tracing/SKILL.md
 ```
 

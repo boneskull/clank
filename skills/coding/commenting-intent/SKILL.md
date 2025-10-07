@@ -179,6 +179,6 @@ From baseline:
 
 ## Integration with Other Skills
 
-**For evergreen comments:** See @../writing-evergreen-comments/SKILL.md - no temporal context in comments
+**For evergreen comments:** See @skills/writing-evergreen-comments/SKILL.md - no temporal context in comments
 
-**For self-documenting code:** See @../naming-variables/SKILL.md - good names reduce need for comments
+**For self-documenting code:** See @skills/naming-variables/SKILL.md - good names reduce need for comments

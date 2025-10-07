@@ -148,4 +148,4 @@ From baseline:
 
 ## Integration with Other Skills
 
-**For naming clarity:** See @../naming-variables/SKILL.md - each purpose needs its own well-named variable
+**For naming clarity:** See @skills/naming-variables/SKILL.md - each purpose needs its own well-named variable

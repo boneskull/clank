@@ -743,6 +743,6 @@ From Code Complete:
 
 ## Integration with Other Skills
 
-**For initialization:** See patterns in @../designing-before-coding/SKILL.md for thinking about data initialization early in design
+**For initialization:** See patterns in @skills/designing-before-coding/SKILL.md for thinking about data initialization early in design
 
-**For naming:** See @../naming-variables/SKILL.md - short-lived local variables can have shorter names; longer-lived variables need more descriptive names
+**For naming:** See @skills/naming-variables/SKILL.md - short-lived local variables can have shorter names; longer-lived variables need more descriptive names

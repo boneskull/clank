@@ -4,7 +4,16 @@
 
 set -euo pipefail
 
-SKILLS_DIR="${HOME}/.claude/skills"
+# Detect if running from repo or installed location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ "$SCRIPT_DIR" == *"/.claude/skills/getting-started" ]]; then
+    # Installed location
+    SKILLS_DIR="${HOME}/.claude/skills"
+else
+    # Running from repo
+    SKILLS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
+
 LOG_FILE="${SKILLS_DIR}/.search-log.jsonl"
 
 # Show usage if no arguments
@@ -50,8 +59,8 @@ echo "$results" | while read -r file; do
     # Extract description from frontmatter
     description=$(grep "^description:" "$file" 2>/dev/null | sed 's/description: *//' || echo "")
 
-    # Get relative path with @ prefix
-    rel_path="@${file#$SKILLS_DIR/}"
+    # Get absolute path with @skills/ prefix
+    rel_path="@skills/${file#$SKILLS_DIR/}"
 
     if [[ -n "$description" ]]; then
         echo "$rel_path - $description"

@@ -24,7 +24,7 @@ Transform rough ideas into fully-formed designs through structured questioning a
 - Gather: Purpose, constraints, success criteria
 
 ### Phase 2: Exploration
-- Propose 2-3 different approaches (reference @../../coding/exploring-alternatives/SKILL.md)
+- Propose 2-3 different approaches (reference @skills/coding/exploring-alternatives/SKILL.md)
 - For each: Core architecture, trade-offs, complexity assessment
 - Ask Jesse which approach resonates
 
@@ -46,12 +46,12 @@ Ask: "Ready to create the implementation plan?"
 
 When Jesse confirms (any affirmative response):
 - Announce: "I'm using the Writing Plans skill to create the implementation plan."
-- Switch to `@../writing-plans/SKILL.md` skill
+- Switch to `@skills/writing-plans/SKILL.md` skill
 - Create detailed plan in the worktree
 
 ## Remember
 - One question per message during Phase 1
-- Apply YAGNI ruthlessly (reference @../../architecture/reducing-complexity/SKILL.md)
+- Apply YAGNI ruthlessly (reference @skills/architecture/reducing-complexity/SKILL.md)
 - Explore 2-3 alternatives before settling
 - Present incrementally, validate as you go
 - Announce skill usage at start

@@ -130,7 +130,7 @@ ls -la ~/.claude/commands/
 
 Forking lets you:
 - **Customize** skills and commands for your workflow
-- **Contribute** improvements back via PR (see @../contributing-skills/SKILL.md)
+- **Contribute** improvements back via PR (see @skills/contributing-skills/SKILL.md)
 - **Stay synced** with upstream updates (`git pull upstream main`)
 - **Track** your customizations in version control
 

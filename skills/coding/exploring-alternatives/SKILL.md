@@ -374,6 +374,6 @@ From baseline testing:
 
 ## Integration with Other Skills
 
-**For design iteration:** See @../designing-before-coding/SKILL.md - exploring alternatives happens during the pseudocode phase (Step 7)
+**For design iteration:** See @skills/designing-before-coding/SKILL.md - exploring alternatives happens during the pseudocode phase (Step 7)
 
-**For complexity:** See @../../architecture/reducing-complexity/SKILL.md - simpler alternatives reduce complexity
+**For complexity:** See @skills/architecture/reducing-complexity/SKILL.md - simpler alternatives reduce complexity

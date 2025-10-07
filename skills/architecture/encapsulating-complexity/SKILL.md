@@ -754,6 +754,6 @@ From baseline testing:
 
 ## Integration with Other Skills
 
-**For keeping interfaces focused:** See @../../coding/keeping-routines-focused/SKILL.md - single responsibility applies to classes too
+**For keeping interfaces focused:** See @skills/coding/keeping-routines-focused/SKILL.md - single responsibility applies to classes too
 
-**For reducing complexity:** See @../reducing-complexity/SKILL.md - encapsulation reduces complexity by hiding details
+**For reducing complexity:** See @skills/reducing-complexity/SKILL.md - encapsulation reduces complexity by hiding details

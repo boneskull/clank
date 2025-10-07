@@ -211,6 +211,6 @@ validator.validate();
 
 ## Integration with Other Skills
 
-**For tactical variable naming:** See @../naming-variables/SKILL.md for comprehensive variable naming techniques (optimal length, scope rules, conventions for booleans/collections/qualifiers, naming as diagnostic tool)
+**For tactical variable naming:** See @skills/naming-variables/SKILL.md for comprehensive variable naming techniques (optimal length, scope rules, conventions for booleans/collections/qualifiers, naming as diagnostic tool)
 
-**For comment guidelines:** See @../writing-evergreen-comments/SKILL.md for keeping comments evergreen (no temporal context in comments either)
+**For comment guidelines:** See @skills/writing-evergreen-comments/SKILL.md for keeping comments evergreen (no temporal context in comments either)

@@ -651,6 +651,6 @@ From Code Complete and baseline testing:
 
 ## Integration with Other Skills
 
-**For multi-layer validation:** See @../../debugging/defense-in-depth/SKILL.md for validating at every layer data passes through
+**For multi-layer validation:** See @skills/debugging/defense-in-depth/SKILL.md for validating at every layer data passes through
 
-**For systematic debugging:** If validation fails in production, see @../../debugging/systematic-debugging/SKILL.md for root cause analysis
+**For systematic debugging:** If validation fails in production, see @skills/debugging/systematic-debugging/SKILL.md for root cause analysis

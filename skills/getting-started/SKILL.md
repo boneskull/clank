@@ -15,7 +15,7 @@ Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skill
 
 **We always need to understand requirements and create a plan first.**
 
-When Jesse asks for help with planning or building something, your FIRST action is to use `@../collaboration/brainstorming/SKILL.md` to refine the idea into a design.
+When Jesse asks for help with planning or building something, your FIRST action is to use `@skills/collaboration/brainstorming/SKILL.md` to refine the idea into a design.
 
 **Trigger phrases (activate brainstorming automatically):**
 - "I've got an idea"
@@ -34,16 +34,16 @@ When Jesse asks for help with planning or building something, your FIRST action 
 
 ## Navigation
 
-**Start:** @../INDEX.md - Categories with descriptions
+**Start:** @skills/INDEX.md - Categories with descriptions
 
 **Categories:**
-- @../testing/INDEX.md
-- @../debugging/INDEX.md
-- @../architecture/INDEX.md
-- @../collaboration/INDEX.md
-- @../meta/INDEX.md
+- @skills/testing/INDEX.md
+- @skills/debugging/INDEX.md
+- @skills/architecture/INDEX.md
+- @skills/collaboration/INDEX.md
+- @skills/meta/INDEX.md
 
-**Individual skills:** From category INDEX, load: `@../testing/condition-based-waiting/SKILL.md`
+**Individual skills:** From category INDEX, load: `@skills/testing/condition-based-waiting/SKILL.md`
 
 **Supporting files:** Load only when needed (`example.ts`, `script.sh`)
 
@@ -94,11 +94,11 @@ See @skills-search tool for implementation.
 Found something valuable?
 1. Note it (don't interrupt work)
 2. Create while fresh
-3. Follow @../meta/skill-creation/SKILL.md
+3. Follow @skills/meta/skill-creation/SKILL.md
 
 ## Requesting Skills
 
-Want a skill that doesn't exist? Edit @../REQUESTS.md with what you need, when you'd use it, and why it's non-obvious.
+Want a skill that doesn't exist? Edit @skills/REQUESTS.md with what you need, when you'd use it, and why it's non-obvious.
 
 ## Announcing Skill Usage
 
@@ -127,11 +127,11 @@ Examples:
 | Need | Action |
 |------|--------|
 | **Starting any task** | `skills-search 'pattern'` |
-| Browse all | @../INDEX.md |
-| Testing | @../testing/INDEX.md |
-| Debugging | @../debugging/INDEX.md |
-| Architecture | @../architecture/INDEX.md |
-| Create skill | @../meta/skill-creation/SKILL.md |
-| Request skill | Edit @../REQUESTS.md |
+| Browse all | @skills/INDEX.md |
+| Testing | @skills/testing/INDEX.md |
+| Debugging | @skills/debugging/INDEX.md |
+| Architecture | @skills/architecture/INDEX.md |
+| Create skill | @skills/meta/skill-creation/SKILL.md |
+| Request skill | Edit @skills/REQUESTS.md |
 
 **Skills are mandatory when they exist.** Not optional, not suggestions - requirements.

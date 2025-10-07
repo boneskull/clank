@@ -280,4 +280,4 @@ class Validator {
 
 ## Integration with Naming
 
-See @../naming-by-domain/SKILL.md for domain-focused naming (no temporal context in names either).
+See @skills/naming-by-domain/SKILL.md for domain-focused naming (no temporal context in names either).
