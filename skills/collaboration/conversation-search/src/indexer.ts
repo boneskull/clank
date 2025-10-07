@@ -9,6 +9,11 @@ import { ConversationExchange } from './types.js';
 const PROJECTS_DIR = path.join(os.homedir(), '.claude', 'projects');
 const ARCHIVE_DIR = path.join(os.homedir(), '.clank', 'conversation-archive');
 
+// Projects to exclude from indexing (meta-conversations about conversations)
+const EXCLUDED_PROJECTS = [
+  '-Users-jesse-Documents-GitHub-projects-claude-introspection'
+];
+
 export async function indexConversations(limitToProject?: string): Promise<void> {
   console.log('Initializing database...');
   const db = initDatabase();
@@ -22,6 +27,12 @@ export async function indexConversations(limitToProject?: string): Promise<void>
   let totalExchanges = 0;
 
   for (const project of projects) {
+    // Skip excluded projects
+    if (EXCLUDED_PROJECTS.includes(project)) {
+      console.log(`\nSkipping excluded project: ${project}`);
+      continue;
+    }
+
     // Skip if limiting to specific project
     if (limitToProject && project !== limitToProject) continue;
     const projectPath = path.join(PROJECTS_DIR, project);
