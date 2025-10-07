@@ -71,15 +71,25 @@ export async function summarizeConversation(exchanges: ConversationExchange[]): 
   // For short conversations (≤15 exchanges), summarize directly
   if (exchanges.length <= 15) {
     const conversationText = formatConversationText(exchanges);
-    const prompt = `Summarize this conversation in one paragraph. Put your summary in <summary></summary> tags.
+    const prompt = `Context: This summary will be shown in a list to help users and Claude choose which conversations are relevant to a future activity.
 
-Good example:
-<summary>The user requested help implementing authentication in a React app. We added JWT-based auth with refresh tokens, implemented protected routes, and fixed a token expiration bug. Key challenge was handling token refresh during ongoing requests.</summary>
+Summarize what happened in 2-4 sentences. Be factual and specific. Output in <summary></summary> tags.
 
-Bad example:
-<summary>Here's a summary of the conversation: The conversation was about authentication...</summary>
+Include:
+- What was built/changed/discussed (be specific)
+- Key technical decisions or approaches
+- Problems solved or current state
 
-Your turn - be direct, factual, concise (150 words max):
+Exclude:
+- Apologies, meta-commentary, or your questions
+- Raw logs or debug output
+- Generic descriptions - focus on what makes THIS conversation unique
+
+Good:
+<summary>Built JWT authentication for React app with refresh tokens and protected routes. Fixed token expiration bug by implementing refresh-during-request logic.</summary>
+
+Bad:
+<summary>I apologize. The conversation discussed authentication and various approaches were considered...</summary>
 
 ${conversationText}`;
 
@@ -98,11 +108,11 @@ ${conversationText}`;
   const chunkSummaries: string[] = [];
   for (let i = 0; i < chunks.length; i++) {
     const chunkText = formatConversationText(chunks[i]);
-    const prompt = `Summarize this part in 3-4 sentences. Use <summary></summary> tags.
+    const prompt = `Summarize this part of a conversation in 2-3 sentences. What happened, what was built/discussed. Use <summary></summary> tags.
 
 ${chunkText}
 
-Example: <summary>User asked about X. We implemented Y using Z library. Hit issue with A, fixed by B.</summary>`;
+Example: <summary>Implemented HID keyboard functionality for ESP32. Hit Bluetooth controller initialization error, fixed by adjusting memory allocation.</summary>`;
 
     try {
       const summary = await callClaude(prompt);
@@ -119,18 +129,20 @@ Example: <summary>User asked about X. We implemented Y using Z library. Hit issu
   }
 
   // Synthesize chunks into final summary
-  const synthesisPrompt = `These are summaries from parts of one long conversation. Write one cohesive paragraph covering the overall goal, what was accomplished, and key challenges. Use <summary></summary> tags.
+  const synthesisPrompt = `Context: This summary will be shown in a list to help users and Claude choose which past conversations are relevant to a future activity.
+
+Synthesize these part-summaries into one cohesive paragraph. Focus on what was accomplished and any notable technical decisions or challenges. Output in <summary></summary> tags.
 
 Part summaries:
-${chunkSummaries.map((s, i) => `${i + 1}. ${s}`).join('\n\n')}
+${chunkSummaries.map((s, i) => `${i + 1}. ${s}`).join('\n')}
 
-Good example:
-<summary>The user wanted to build a conversation search system. We implemented JavaScript-based indexing with local embeddings and sqlite-vec for vector search. Main challenge was handling long conversations via hierarchical summarization. Final system archives conversations and enables semantic search.</summary>
+Good:
+<summary>Built conversation search system with JavaScript, sqlite-vec, and local embeddings. Implemented hierarchical summarization for long conversations. System archives conversations permanently and provides semantic search via CLI.</summary>
 
-Bad example:
-<summary>Here's a synthesis of the parts: The conversation covered several topics...</summary>
+Bad:
+<summary>This conversation synthesizes several topics discussed across multiple parts...</summary>
 
-Your turn (200 words max):`;
+Your summary (max 200 words):`;
 
   console.log(`  Synthesizing final summary...`);
   try {
