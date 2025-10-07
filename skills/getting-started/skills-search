@@ -40,8 +40,8 @@ timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 query="$*"
 echo "{\"timestamp\":\"$timestamp\",\"query\":\"$query\"}" >> "$LOG_FILE" 2>/dev/null || true
 
-# Search all SKILL.md files
-results=$(grep -r "$@" "$SKILLS_DIR" --include="SKILL.md" -l 2>/dev/null || true)
+# Search all SKILL.md files (add trailing slash for symlink compatibility)
+results=$(grep -r "$@" "$SKILLS_DIR/" --include="SKILL.md" -l 2>/dev/null || true)
 
 if [[ -z "$results" ]]; then
     echo "❌ No skills found matching: $*"
