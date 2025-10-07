@@ -97,14 +97,22 @@ ${chunkText}`;
   }
 
   // Synthesize chunks into final summary
-  const synthesisPrompt = `One paragraph (200 words max) synthesizing the goal, what was accomplished, and key challenges. No preamble - output goes directly to index.
+  const synthesisPrompt = `These are summaries of parts of one conversation. Write one cohesive paragraph (200 words max) about the overall goal, what was accomplished, and key challenges.
 
-Part summaries:
-${chunkSummaries.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+${chunkSummaries.map((s, i) => `Part ${i + 1}: ${s}`).join('\n\n')}
+
+Output ONLY the final summary paragraph. No meta-commentary.`;
 
   console.log(`  Synthesizing final summary...`);
   try {
-    return await callClaude(synthesisPrompt);
+    let result = await callClaude(synthesisPrompt);
+
+    // Strip common preambles if present
+    result = result.replace(/^(Here'?s? ?(a|the)? ?(synthesized? )?summary:?\s*)/i, '');
+    result = result.replace(/^(The summary provides?:?\s*)/i, '');
+    result = result.replace(/^(I'?ll synthesize:?\s*)/i, '');
+
+    return result.trim();
   } catch (error) {
     console.log(`  Synthesis failed, using chunk summaries`);
     return chunkSummaries.join(' ');
