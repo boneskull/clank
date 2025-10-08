@@ -10,8 +10,8 @@ cd ~/.claude/skills/collaboration/remembering-conversations/tool
 # 1. Install hook
 ./install-hook
 
-# 2. Index existing conversations
-./index-conversations
+# 2. Index existing conversations (with parallel summarization)
+./index-conversations --cleanup --concurrency 8
 
 # 3. Verify index health
 ./index-conversations --verify
@@ -25,6 +25,8 @@ cd ~/.claude/skills/collaboration/remembering-conversations/tool
 - Summaries created for all conversations (50-120 words each)
 - Search returns relevant results in <1 second
 - No verification errors
+
+**Performance tip:** Use `--concurrency 8` or `--concurrency 16` for 8-16x faster summarization on initial indexing. Hook uses concurrency=1 (safe for background).
 
 ## Ongoing Maintenance
 

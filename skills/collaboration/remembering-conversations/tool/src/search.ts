@@ -11,11 +11,28 @@ export interface SearchOptions {
   before?: string; // ISO date string
 }
 
+function validateISODate(dateStr: string, paramName: string): void {
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!isoDateRegex.test(dateStr)) {
+    throw new Error(`Invalid ${paramName} date: "${dateStr}". Expected YYYY-MM-DD format (e.g., 2025-10-01)`);
+  }
+  // Verify it's actually a valid date
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) {
+    throw new Error(`Invalid ${paramName} date: "${dateStr}". Not a valid calendar date.`);
+  }
+}
+
 export async function searchConversations(
   query: string,
   options: SearchOptions = {}
 ): Promise<SearchResult[]> {
   const { limit = 10, mode = 'vector', after, before } = options;
+
+  // Validate date parameters
+  if (after) validateISODate(after, '--after');
+  if (before) validateISODate(before, '--before');
+
   const db = initDatabase();
 
   let results: any[] = [];
