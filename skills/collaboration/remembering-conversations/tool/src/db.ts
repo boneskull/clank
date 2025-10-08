@@ -2,12 +2,36 @@ import Database from 'better-sqlite3';
 import { ConversationExchange } from './types.js';
 import path from 'path';
 import os from 'os';
+import fs from 'fs';
 import * as sqliteVec from 'sqlite-vec';
 
-const DB_PATH = path.join(os.homedir(), '.clank', 'conversation-index', 'db.sqlite');
+function getDbPath(): string {
+  return process.env.TEST_DB_PATH || path.join(os.homedir(), '.clank', 'conversation-index', 'db.sqlite');
+}
+
+export function migrateSchema(db: Database.Database): void {
+  const hasColumn = db.prepare(`
+    SELECT COUNT(*) as count FROM pragma_table_info('exchanges')
+    WHERE name='last_indexed'
+  `).get() as { count: number };
+
+  if (hasColumn.count === 0) {
+    console.log('Migrating schema: adding last_indexed column...');
+    db.prepare('ALTER TABLE exchanges ADD COLUMN last_indexed INTEGER').run();
+    console.log('Migration complete.');
+  }
+}
 
 export function initDatabase(): Database.Database {
-  const db = new Database(DB_PATH);
+  const dbPath = getDbPath();
+
+  // Ensure directory exists
+  const dbDir = path.dirname(dbPath);
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+
+  const db = new Database(dbPath);
 
   // Load sqlite-vec extension
   sqliteVec.load(db);
@@ -43,6 +67,9 @@ export function initDatabase(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_timestamp ON exchanges(timestamp DESC)
   `);
 
+  // Run migrations
+  migrateSchema(db);
+
   return db;
 }
 
@@ -51,10 +78,12 @@ export function insertExchange(
   exchange: ConversationExchange,
   embedding: number[]
 ): void {
+  const now = Date.now();
+
   const stmt = db.prepare(`
     INSERT OR REPLACE INTO exchanges
-    (id, project, timestamp, user_message, assistant_message, archive_path, line_start, line_end)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    (id, project, timestamp, user_message, assistant_message, archive_path, line_start, line_end, last_indexed)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   stmt.run(
@@ -65,7 +94,8 @@ export function insertExchange(
     exchange.assistantMessage,
     exchange.archivePath,
     exchange.lineStart,
-    exchange.lineEnd
+    exchange.lineEnd,
+    now
   );
 
   // Insert into vector table (delete first since virtual tables don't support REPLACE)
@@ -78,4 +108,27 @@ export function insertExchange(
   `);
 
   vecStmt.run(exchange.id, Buffer.from(new Float32Array(embedding).buffer));
+}
+
+export function getAllExchanges(db: Database.Database): Array<{ id: string; archivePath: string }> {
+  const stmt = db.prepare(`SELECT id, archive_path as archivePath FROM exchanges`);
+  return stmt.all() as Array<{ id: string; archivePath: string }>;
+}
+
+export function getFileLastIndexed(db: Database.Database, archivePath: string): number | null {
+  const stmt = db.prepare(`
+    SELECT MAX(last_indexed) as lastIndexed
+    FROM exchanges
+    WHERE archive_path = ?
+  `);
+  const row = stmt.get(archivePath) as { lastIndexed: number | null };
+  return row.lastIndexed;
+}
+
+export function deleteExchange(db: Database.Database, id: string): void {
+  // Delete from vector table
+  db.prepare(`DELETE FROM vec_exchanges WHERE id = ?`).run(id);
+
+  // Delete from main table
+  db.prepare(`DELETE FROM exchanges WHERE id = ?`).run(id);
 }

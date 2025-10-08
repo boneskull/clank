@@ -1,32 +1,31 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-# Parse arguments
-SESSION_ID=""
-CLEANUP=false
+SCRIPT_DIR="$(pwd)"
 
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --session)
-      SESSION_ID="$2"
-      shift 2
-      ;;
-    --cleanup)
-      CLEANUP=true
-      shift
-      ;;
-    *)
-      echo "Usage: index-conversations [--session <id>] [--cleanup]"
-      exit 1
-      ;;
-  esac
-done
-
-# Run indexer with appropriate mode
-if [ "$CLEANUP" = true ]; then
-  npx tsx -e "import('./src/indexer.js').then(m => m.indexUnprocessed()).catch(e => { console.error('Error:', e); process.exit(1); })"
-elif [ -n "$SESSION_ID" ]; then
-  npx tsx -e "import('./src/indexer.js').then(m => m.indexSession('$SESSION_ID')).catch(e => { console.error('Error:', e); process.exit(1); })"
-else
-  npx tsx -e "import('./src/indexer.js').then(m => m.indexConversations()).catch(e => { console.error('Error:', e); process.exit(1); })"
-fi
+case "$1" in
+  --session)
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" index-session "$2"
+    ;;
+  --cleanup)
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" index-cleanup
+    ;;
+  --verify)
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" verify
+    ;;
+  --repair)
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" repair
+    ;;
+  --rebuild)
+    echo "⚠️  This will DELETE the entire database and re-index everything."
+    read -p "Are you sure? [yes/NO]: " confirm
+    if [ "$confirm" = "yes" ]; then
+      npx tsx "$SCRIPT_DIR/src/index-cli.ts" rebuild
+    else
+      echo "Cancelled"
+    fi
+    ;;
+  *)
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" index-all "$@"
+    ;;
+esac
