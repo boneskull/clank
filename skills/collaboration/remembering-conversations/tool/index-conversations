@@ -5,22 +5,22 @@ SCRIPT_DIR="$(pwd)"
 
 case "$1" in
   --session)
-    npx tsx "$SCRIPT_DIR/src/index-cli.ts" index-session "$2"
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" index-session "$@"
     ;;
   --cleanup)
-    npx tsx "$SCRIPT_DIR/src/index-cli.ts" index-cleanup
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" index-cleanup "$@"
     ;;
   --verify)
-    npx tsx "$SCRIPT_DIR/src/index-cli.ts" verify
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" verify "$@"
     ;;
   --repair)
-    npx tsx "$SCRIPT_DIR/src/index-cli.ts" repair
+    npx tsx "$SCRIPT_DIR/src/index-cli.ts" repair "$@"
     ;;
   --rebuild)
     echo "⚠️  This will DELETE the entire database and re-index everything."
     read -p "Are you sure? [yes/NO]: " confirm
     if [ "$confirm" = "yes" ]; then
-      npx tsx "$SCRIPT_DIR/src/index-cli.ts" rebuild
+      npx tsx "$SCRIPT_DIR/src/index-cli.ts" rebuild "$@"
     else
       echo "Cancelled"
     fi
