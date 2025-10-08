@@ -131,8 +131,7 @@ The skill itself tells you which type it is.
 Use path format without `@` prefix or `/SKILL.md` suffix:
 - ✅ Good: `skills/testing/test-driven-development`
 - ✅ Good: `skills/debugging/systematic-debugging`
-- ❌ Bad: `skills/testing/test-driven-development` (force-loads, burns context)
-- ❌ Bad: `skills/testing/test-driven-development` (brittle, force-loads)
+- ❌ Bad: `@skills/testing/test-driven-development/SKILL.md` (force-loads, burns context)
 
 **Why no @ links:** `@` syntax force-loads files immediately, consuming 200k+ context before you need them.
 
