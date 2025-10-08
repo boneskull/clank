@@ -42,8 +42,8 @@ Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skill
 ~/.claude/skills/getting-started/skills-search PATTERN
 ```
 
-**2. Search conversations** (if task feels familiar):
-Dispatch subagent (see Workflow 3) for past context.
+**2. Search conversations:**
+Dispatch subagent (see Workflow 3) to check for relevant past work.
 
 **If skills found:**
 1. READ the skill: `~/.claude/skills/path/skill-name/SKILL.md`
@@ -51,8 +51,6 @@ Dispatch subagent (see Workflow 3) for past context.
 3. FOLLOW the skill (many are rigid requirements)
 
 **Failure:** Skills/conversations exist and you didn't use them = failed task.
-
-**Also search when stuck** (debugging, blocked, exploring alternatives).
 
 ## Mandatory Workflow 3: Historical Context Search
 
