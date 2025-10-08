@@ -32,7 +32,29 @@ Search archived conversations using semantic similarity or exact text matching. 
 - Question is about current codebase state (use file search instead)
 - Looking for active code (use Grep/Read instead)
 
-## How to Search
+## Integration with Getting-Started
+
+**The getting-started skill teaches the mandatory subagent workflow for in-session searches.**
+
+When searching from a main conversation, **always use subagents** to prevent context bloat:
+- Direct search loads 50k tokens per conversation
+- Subagent synthesis returns 500-1000 tokens total
+- **50-100x context savings**
+
+**Subagent workflow (see skills/getting-started):**
+1. Announce: "I'm searching previous conversations for [topic]"
+2. Dispatch general-purpose subagent with search template at `tool/prompts/search-agent.md`
+3. Subagent searches, reads top 2-5 results, synthesizes (max 1000 words) + source pointers
+4. Use synthesis in main context
+5. If more detail needed: dispatch follow-up subagent (recommended) OR read sources directly (discouraged)
+
+**Two use cases:**
+- **In-session (main conversation):** Use subagent pattern (mandatory, covered by getting-started)
+- **Manual/command-line (outside session):** Direct search (documented below)
+
+## Direct Search (Manual/Command-Line Use)
+
+**For manual use outside Claude Code sessions:**
 
 **Basic search:**
 ```bash
