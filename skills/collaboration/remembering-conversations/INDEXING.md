@@ -97,11 +97,28 @@ Handles existing hooks gracefully (merge or replace). Runs in background after e
 - Try text search: `./search-conversations --text "exact phrase"`
 - Rebuild if needed: `./index-conversations --rebuild`
 
+## Excluding Projects
+
+To exclude specific projects from indexing (e.g., meta-conversations), create:
+
+`~/.clank/conversation-index/exclude.txt`
+```
+# One project name per line
+# Lines starting with # are comments
+-Users-yourname-Documents-some-project
+```
+
+Or set env variable:
+```bash
+export CONVERSATION_SEARCH_EXCLUDE_PROJECTS="project1,project2"
+```
+
 ## Storage
 
 - **Archive:** `~/.clank/conversation-archive/<project>/<uuid>.jsonl`
 - **Summaries:** `~/.clank/conversation-archive/<project>/<uuid>-summary.txt`
 - **Database:** `~/.clank/conversation-index/db.sqlite`
+- **Exclusions:** `~/.clank/conversation-index/exclude.txt` (optional)
 
 ## Technical Details
 

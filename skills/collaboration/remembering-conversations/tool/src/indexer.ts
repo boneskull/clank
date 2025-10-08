@@ -23,10 +23,23 @@ function getArchiveDir(): string {
   return process.env.TEST_ARCHIVE_DIR || path.join(os.homedir(), '.clank', 'conversation-archive');
 }
 
-// Projects to exclude from indexing (meta-conversations about conversations)
-const EXCLUDED_PROJECTS = [
-  '-Users-jesse-Documents-GitHub-projects-claude-introspection'
-];
+// Projects to exclude from indexing (configurable via env or config file)
+function getExcludedProjects(): string[] {
+  // Check env variable first
+  if (process.env.CONVERSATION_SEARCH_EXCLUDE_PROJECTS) {
+    return process.env.CONVERSATION_SEARCH_EXCLUDE_PROJECTS.split(',').map(p => p.trim());
+  }
+
+  // Check for config file
+  const configPath = path.join(os.homedir(), '.clank', 'conversation-index', 'exclude.txt');
+  if (fs.existsSync(configPath)) {
+    const content = fs.readFileSync(configPath, 'utf-8');
+    return content.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#'));
+  }
+
+  // Default: no exclusions
+  return [];
+}
 
 // Process items in batches with limited concurrency
 async function processBatch<T, R>(
@@ -64,9 +77,11 @@ export async function indexConversations(
   let totalExchanges = 0;
   let conversationsProcessed = 0;
 
+  const excludedProjects = getExcludedProjects();
+
   for (const project of projects) {
     // Skip excluded projects
-    if (EXCLUDED_PROJECTS.includes(project)) {
+    if (excludedProjects.includes(project)) {
       console.log(`\nSkipping excluded project: ${project}`);
       continue;
     }
@@ -182,10 +197,11 @@ export async function indexSession(sessionId: string, concurrency: number = 1): 
   const PROJECTS_DIR = getProjectsDir();
   const ARCHIVE_DIR = getArchiveDir();
   const projects = fs.readdirSync(PROJECTS_DIR);
+  const excludedProjects = getExcludedProjects();
   let found = false;
 
   for (const project of projects) {
-    if (EXCLUDED_PROJECTS.includes(project)) continue;
+    if (excludedProjects.includes(project)) continue;
 
     const projectPath = path.join(PROJECTS_DIR, project);
     if (!fs.statSync(projectPath).isDirectory()) continue;
@@ -254,6 +270,7 @@ export async function indexUnprocessed(concurrency: number = 1): Promise<void> {
   const PROJECTS_DIR = getProjectsDir();
   const ARCHIVE_DIR = getArchiveDir();
   const projects = fs.readdirSync(PROJECTS_DIR);
+  const excludedProjects = getExcludedProjects();
 
   type UnprocessedConv = {
     project: string;
@@ -268,7 +285,7 @@ export async function indexUnprocessed(concurrency: number = 1): Promise<void> {
 
   // Collect all unprocessed conversations
   for (const project of projects) {
-    if (EXCLUDED_PROJECTS.includes(project)) continue;
+    if (excludedProjects.includes(project)) continue;
 
     const projectPath = path.join(PROJECTS_DIR, project);
     if (!fs.statSync(projectPath).isDirectory()) continue;
