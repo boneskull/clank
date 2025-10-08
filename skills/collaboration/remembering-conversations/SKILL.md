@@ -15,7 +15,7 @@ Search archived conversations using semantic similarity or exact text matching. 
 
 **Announce when using:** "I'm searching previous conversations for [topic]."
 
-**For indexing/setup:** See INDEXING.md
+**For setup/management:** See INDEXING.md (install hook, index all conversations, recovery modes)
 
 ## When to Use
 

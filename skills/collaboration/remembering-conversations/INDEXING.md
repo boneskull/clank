@@ -1,8 +1,13 @@
 # Managing Conversation Index
 
-How to index, archive, and maintain conversations for search.
+Index, archive, and maintain conversations for search.
 
 ## Quick Start
+
+**Install auto-indexing hook:**
+```bash
+~/.claude/skills/collaboration/remembering-conversations/tool/install-hook
+```
 
 **Index all conversations:**
 ```bash
@@ -16,46 +21,81 @@ How to index, archive, and maintain conversations for search.
 
 ## Features
 
+- **Automatic indexing** via sessionEnd hook (install once, forget)
 - **Semantic search** across all past conversations
-- **AI summaries** generated with Claude Haiku (Sonnet fallback)
+- **AI summaries** (Claude Haiku with Sonnet fallback)
+- **Recovery modes** (verify, repair, rebuild)
 - **Permanent archive** at `~/.clank/conversation-archive/`
-- **Vector database** for fast similarity search
-- **Automatic indexing** via sessionEnd hook
 
-## Usage
+## Setup
 
-### Index Modes
+### 1. Install Hook (One-Time)
 
 ```bash
-# Index all conversations
+cd ~/.claude/skills/collaboration/remembering-conversations/tool
+./install-hook
+```
+
+Handles existing hooks gracefully (merge or replace). Runs in background after each session.
+
+### 2. Index Existing Conversations
+
+```bash
+# Index everything
 ./index-conversations
 
-# Index specific session (for hooks)
-./index-conversations --session <session-id>
-
-# Process unprocessed conversations (missing summaries)
+# Or just unindexed (faster, cheaper)
 ./index-conversations --cleanup
 ```
 
-### Search
+## Index Modes
 
 ```bash
-./search-conversations "authentication errors"
-./search-conversations "React Router data loading"
+# Index all (first run or full rebuild)
+./index-conversations
+
+# Index specific session (used by hook)
+./index-conversations --session <uuid>
+
+# Process only unindexed (missing summaries)
+./index-conversations --cleanup
+
+# Check index health
+./index-conversations --verify
+
+# Fix detected issues
+./index-conversations --repair
+
+# Nuclear option (deletes DB, re-indexes everything)
+./index-conversations --rebuild
 ```
 
-Returns: project, date, snippet, file path, similarity score
+## Recovery Scenarios
 
-### Auto-indexing Setup
+| Situation | Command |
+|-----------|---------|
+| Missed conversations | `--cleanup` |
+| Hook didn't run | `--cleanup` |
+| Updated conversation | `--verify` then `--repair` |
+| Corrupted database | `--rebuild` |
+| Index health check | `--verify` |
 
-Copy the sessionEnd hook to enable automatic indexing after each session:
+## Troubleshooting
 
-```bash
-cp hooks/sessionEnd ~/.claude/hooks/sessionEnd
-chmod +x ~/.claude/hooks/sessionEnd
-```
+**Hook not running:**
+- Check: `ls -l ~/.claude/hooks/sessionEnd` (should be executable)
+- Test: `SESSION_ID=test-$(date +%s) ~/.claude/hooks/sessionEnd`
+- Re-install: `./install-hook`
 
-This will automatically index conversations when sessions end (runs in background).
+**Summaries failing:**
+- Check API key: `echo $ANTHROPIC_API_KEY`
+- Check logs in ~/.clank/conversation-index/
+- Try manual: `./index-conversations --session <uuid>`
+
+**Search not finding results:**
+- Verify indexed: `./index-conversations --verify`
+- Try text search: `./search-conversations --text "exact phrase"`
+- Rebuild if needed: `./index-conversations --rebuild`
 
 ## Storage
 
@@ -65,15 +105,12 @@ This will automatically index conversations when sessions end (runs in backgroun
 
 ## Technical Details
 
-- **Embeddings:** @xenova/transformers (all-MiniLM-L6-v2, 384 dimensions)
-- **Vector search:** sqlite-vec
-- **Summaries:** Claude Haiku with automatic Sonnet fallback
+- **Embeddings:** @xenova/transformers (all-MiniLM-L6-v2, 384 dimensions, local/free)
+- **Vector search:** sqlite-vec (local/free)
+- **Summaries:** Claude Haiku with Sonnet fallback (~$0.01-0.02/conversation)
 - **Parser:** Handles multi-message exchanges and sidechains
 
-## Cost Considerations
+## See Also
 
-- **Embeddings:** Free (local)
-- **Summaries:** ~$0.01-0.02 per conversation (Haiku, hierarchical for long conversations)
-- **Search:** Free (local vector similarity)
-
-Use `--cleanup` to process only unprocessed conversations and control API costs.
+- **Searching:** See SKILL.md for search modes (vector, text, time filtering)
+- **Deployment:** See DEPLOYMENT.md for production runbook
