@@ -10,8 +10,12 @@ Working effectively with other agents and developers.
 
 - skills/collaboration/executing-plans - Execute detailed plans in batches with review checkpoints. Use when have complete implementation plan to execute. When implementing in separate session from planning.
 
-- skills/collaboration/remembering-conversations - Search previous Claude Code conversations for facts, patterns, decisions, and context using semantic or text search. Use when Jesse mentions "we discussed this before". When debugging similar issues. When looking for architectural decisions or code patterns from past work. Before reinventing solutions. When searching for git SHAs or error messages.
+- skills/collaboration/subagent-driven-development - Execute plan by dispatching fresh subagent per task with code review between tasks. Alternative to executing-plans when staying in same session. Use when tasks are independent. When want fast iteration with review checkpoints.
+
+- skills/collaboration/remembering-conversations - Search previous Claude Code conversations for facts, patterns, decisions, and context using semantic or text search. Use when your human partner mentions "we discussed this before". When debugging similar issues. When looking for architectural decisions or code patterns from past work. Before reinventing solutions. When searching for git SHAs or error messages.
 
 - skills/collaboration/dispatching-parallel-agents - Use multiple Claude agents to investigate and fix independent problems concurrently. Use when you have 3+ unrelated failures that can be debugged in parallel.
 
-- skills/collaboration/receiving-code-review - Receive and act on code review feedback with technical rigor, not performative agreement or blind implementation. Use when receiving feedback from Jesse or external reviewers. Before implementing review suggestions. When feedback seems wrong or unclear.
+- skills/collaboration/requesting-code-review - Dispatch code-reviewer subagent to review implementation against plan before proceeding. Use after completing task. After major feature. Before merging. When executing plans (after each task).
+
+- skills/collaboration/receiving-code-review - Receive and act on code review feedback with technical rigor, not performative agreement or blind implementation. Use when receiving feedback from your human partner or external reviewers. Before implementing review suggestions. When feedback seems wrong or unclear.
