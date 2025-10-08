@@ -10,6 +10,10 @@ import { ConversationExchange } from './types.js';
 // Set max output tokens for Claude SDK (used by summarizer)
 process.env.CLAUDE_CODE_MAX_OUTPUT_TOKENS = '20000';
 
+// Increase max listeners for concurrent API calls
+import { EventEmitter } from 'events';
+EventEmitter.defaultMaxListeners = 20;
+
 // Allow overriding paths for testing
 function getProjectsDir(): string {
   return process.env.TEST_PROJECTS_DIR || path.join(os.homedir(), '.claude', 'projects');
