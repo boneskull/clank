@@ -35,7 +35,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For Claude:** Use skills/collaboration/executing-plans to implement this plan task-by-task.
+> **For Claude:** Use `@skills/collaboration/executing-plans/SKILL.md` to implement this plan task-by-task.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -104,4 +104,4 @@ After saving the plan, tell Jesse:
 
 When Jesse confirms (any affirmative response):
 - Guide them to open a new Claude session in the worktree directory
-- Tell them the new session will use skills/collaboration/executing-plans to implement the plan
+- Tell them the new session will use `@skills/executing-plans/SKILL.md` to implement the plan

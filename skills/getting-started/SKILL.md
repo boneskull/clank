@@ -37,27 +37,43 @@ Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skill
 
 ## Mandatory Workflow 2: Before ANY Other Task
 
-**Run:** `~/.claude/skills/getting-started/skills-search PATTERN`
-
-The tool uses grep patterns:
+**1. Search skills:**
 ```bash
-~/.claude/skills/getting-started/skills-search 'test.*driven|TDD'
-~/.claude/skills/getting-started/skills-search 'debug.*systematic|root.cause'
-~/.claude/skills/getting-started/skills-search 'refactor|extract'
+~/.claude/skills/getting-started/skills-search PATTERN
 ```
 
-**Output:** skills/path/skill-name - description
+**2. Search conversations:**
+Dispatch subagent (see Workflow 3) to check for relevant past work.
 
 **If skills found:**
-1. READ the skill using Read tool: `~/.claude/skills/path/skill-name/SKILL.md`
-2. ANNOUNCE usage: "I'm using the [Skill Name] skill to [purpose]"
-3. FOLLOW the skill (many are rigid requirements, not suggestions)
+1. READ the skill: `~/.claude/skills/path/skill-name/SKILL.md`
+2. ANNOUNCE usage: "I'm using the [Skill Name] skill"
+3. FOLLOW the skill (many are rigid requirements)
 
-**If not found:** Proceed carefully (search is logged for gap analysis)
+**Failure:** Skills/conversations exist and you didn't use them = failed task.
 
-**Critical:** If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make.
+## Mandatory Workflow 3: Historical Context Search
 
-**Failure condition:** Skills exist and you didn't use them = failed task.
+**When:** Your human partner mentions past work, issue feels familiar, starting task in familiar domain, stuck/blocked, before reinventing
+
+**When NOT:** Info in current convo, codebase state questions, first encounter, partner wants fresh thinking
+
+**How (use subagent for 50-100x context savings):**
+1. Dispatch subagent with template: `~/.claude/skills/collaboration/remembering-conversations/tool/prompts/search-agent.md`
+2. Receive synthesis (200-1000 words) + source pointers
+3. Apply insights (never load raw .jsonl files)
+
+**Example:**
+```
+Partner: "How did we handle auth errors in React Router?"
+You: Searching past conversations...
+[Dispatch subagent → 350-word synthesis]
+[Apply without loading 50k tokens]
+```
+
+**Red flags:** Reading .jsonl files directly, pasting excerpts, asking "which conversation?", browsing archives
+
+**Pattern:** Search → Subagent synthesizes → Apply. Fast, focused, context-efficient.
 
 ## Announcing Skill Usage
 
