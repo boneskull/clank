@@ -7,8 +7,14 @@ import { initEmbeddings, generateExchangeEmbedding } from './embeddings.js';
 import { summarizeConversation } from './summarizer.js';
 import { ConversationExchange } from './types.js';
 
-const PROJECTS_DIR = path.join(os.homedir(), '.claude', 'projects');
-const ARCHIVE_DIR = path.join(os.homedir(), '.clank', 'conversation-archive');
+// Allow overriding paths for testing
+function getProjectsDir(): string {
+  return process.env.TEST_PROJECTS_DIR || path.join(os.homedir(), '.claude', 'projects');
+}
+
+function getArchiveDir(): string {
+  return process.env.TEST_ARCHIVE_DIR || path.join(os.homedir(), '.clank', 'conversation-archive');
+}
 
 // Projects to exclude from indexing (meta-conversations about conversations)
 const EXCLUDED_PROJECTS = [
@@ -23,6 +29,8 @@ export async function indexConversations(limitToProject?: string, maxConversatio
   await initEmbeddings();
 
   console.log('Scanning for conversation files...');
+  const PROJECTS_DIR = getProjectsDir();
+  const ARCHIVE_DIR = getArchiveDir();
   const projects = fs.readdirSync(PROJECTS_DIR);
 
   let totalExchanges = 0;
@@ -114,6 +122,8 @@ export async function indexSession(sessionId: string): Promise<void> {
   console.log(`Indexing session: ${sessionId}`);
 
   // Find the conversation file for this session
+  const PROJECTS_DIR = getProjectsDir();
+  const ARCHIVE_DIR = getArchiveDir();
   const projects = fs.readdirSync(PROJECTS_DIR);
   let found = false;
 
@@ -183,6 +193,8 @@ export async function indexUnprocessed(): Promise<void> {
   const db = initDatabase();
   await initEmbeddings();
 
+  const PROJECTS_DIR = getProjectsDir();
+  const ARCHIVE_DIR = getArchiveDir();
   const projects = fs.readdirSync(PROJECTS_DIR);
   let processed = 0;
 
