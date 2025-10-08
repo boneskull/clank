@@ -61,46 +61,26 @@ The tool uses grep patterns:
 
 ## Mandatory Workflow 3: Historical Context Search
 
-**When to search past conversations:**
-- Jesse mentions previous work ("we did this before", "similar to X project")
-- Facing an issue that feels familiar or domain-specific
-- Before reinventing a solution to a common problem
-- Need context on architectural decisions or patterns used previously
+**When:** Jesse mentions past work, issue feels familiar, before reinventing, need architectural context
 
-**When NOT to search:**
-- Information already in current conversation
-- Question about current codebase state (use grep/read instead)
-- First-time encounter with a topic or technology
-- Jesse explicitly asks for fresh thinking
+**When NOT:** Info in current convo, codebase state questions, first encounter, Jesse wants fresh thinking
 
-**Why this saves context:**
-- Dispatching subagent: 500-1000 tokens for synthesized insights
-- Loading raw conversations: 50,000+ tokens of noise
-- You get actionable findings, not conversation transcripts
-
-**How to use:**
-1. Dispatch subagent with template at `~/.claude/skills/collaboration/remembering-conversations/tool/prompts/search-agent.md`
-2. Subagent searches, reads top results, synthesizes findings (200-1000 words)
-3. You receive summary + source pointers for deeper investigation if needed
-4. Never load raw conversation files directly
+**How (use subagent for 50-100x context savings):**
+1. Dispatch subagent with template: `~/.claude/skills/collaboration/remembering-conversations/tool/prompts/search-agent.md`
+2. Receive synthesis (200-1000 words) + source pointers
+3. Apply insights (never load raw .jsonl files)
 
 **Example:**
 ```
-Jesse: "How did we handle auth errors in React Router before?"
-
-You: I'll search past conversations for React Router auth patterns.
-[Dispatch subagent with search query: "React Router authentication error handling 401"]
-[Receive: 350-word synthesis of loader error patterns, gotchas, code examples]
-[Use findings to answer Jesse's question without loading 50k tokens]
+Jesse: "How did we handle auth errors in React Router?"
+You: Searching past conversations...
+[Dispatch subagent → 350-word synthesis of patterns/gotchas]
+[Apply findings without loading 50k tokens]
 ```
 
-**Red flags indicating you're doing it wrong:**
-- Reading .jsonl files from ~/.clank/conversation-archive directly
-- Pasting conversation excerpts instead of synthesized insights
-- Asking Jesse "which conversation was that?" instead of searching
-- Loading multiple conversations to "browse" for answers
+**Red flags:** Reading .jsonl files directly, pasting excerpts, asking "which conversation?", browsing archives
 
-**The pattern:** Search → Subagent synthesizes → You apply insights. Fast, focused, context-efficient.
+**Pattern:** Search → Subagent synthesizes → Apply. Fast, focused, context-efficient.
 
 ## Announcing Skill Usage
 
