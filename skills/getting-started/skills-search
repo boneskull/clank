@@ -49,14 +49,14 @@ all_skills=$(find "$SKILLS_DIR/" -name "SKILL.md" -type f 2>/dev/null || true)
 path_matches=$(echo "$all_skills" | grep "$@" 2>/dev/null || true)
 
 # Combine and deduplicate
-results=$(printf "%s\n%s" "$content_matches" "$path_matches" | sort -u | grep -v '^$')
+results=$(printf "%s\n%s" "$content_matches" "$path_matches" | sort -u | grep -v '^$' || true)
 
 if [[ -z "$results" ]]; then
     echo "❌ No skills found matching: $*"
     echo ""
     echo "Search logged. If a skill should exist, it will be created."
     echo "Proceed carefully - document your approach."
-    exit 1
+    exit 0
 fi
 
 echo "✅ Found skills:"
@@ -67,8 +67,9 @@ echo "$results" | while read -r file; do
     # Extract description from frontmatter
     description=$(grep "^description:" "$file" 2>/dev/null | sed 's/description: *//' || echo "")
 
-    # Get absolute path with @skills/ prefix
-    rel_path="@skills/${file#$SKILLS_DIR/}"
+    # Get relative path without @ prefix or /SKILL.md suffix
+    rel_path="${file#$SKILLS_DIR/}"
+    rel_path="skills/${rel_path%/SKILL.md}"
 
     if [[ -n "$description" ]]; then
         echo "$rel_path - $description"
