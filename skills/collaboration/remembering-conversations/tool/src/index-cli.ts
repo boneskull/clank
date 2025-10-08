@@ -7,21 +7,33 @@ import path from 'path';
 import os from 'os';
 
 const command = process.argv[2];
-const arg = process.argv[3];
+
+// Parse --concurrency flag from remaining args
+function getConcurrency(): number {
+  const concurrencyIndex = process.argv.findIndex(arg => arg === '--concurrency' || arg === '-c');
+  if (concurrencyIndex !== -1 && process.argv[concurrencyIndex + 1]) {
+    const value = parseInt(process.argv[concurrencyIndex + 1], 10);
+    if (value >= 1 && value <= 16) return value;
+  }
+  return 1; // default
+}
+
+const concurrency = getConcurrency();
 
 async function main() {
   try {
     switch (command) {
       case 'index-session':
-        if (!arg) {
+        const sessionId = process.argv[3];
+        if (!sessionId) {
           console.error('Usage: index-cli index-session <session-id>');
           process.exit(1);
         }
-        await indexSession(arg);
+        await indexSession(sessionId, concurrency);
         break;
 
       case 'index-cleanup':
-        await indexUnprocessed();
+        await indexUnprocessed(concurrency);
         break;
 
       case 'verify':
@@ -86,12 +98,12 @@ async function main() {
 
         // Re-index everything
         console.log('Re-indexing all conversations...');
-        await indexConversations();
+        await indexConversations(undefined, undefined, concurrency);
         break;
 
       case 'index-all':
       default:
-        await indexConversations();
+        await indexConversations(undefined, undefined, concurrency);
         break;
     }
   } catch (error) {

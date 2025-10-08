@@ -7,6 +7,9 @@ import { initEmbeddings, generateExchangeEmbedding } from './embeddings.js';
 import { summarizeConversation } from './summarizer.js';
 import { ConversationExchange } from './types.js';
 
+// Set max output tokens for Claude SDK (used by summarizer)
+process.env.CLAUDE_CODE_MAX_OUTPUT_TOKENS = '20000';
+
 // Allow overriding paths for testing
 function getProjectsDir(): string {
   return process.env.TEST_PROJECTS_DIR || path.join(os.homedir(), '.claude', 'projects');
@@ -21,7 +24,28 @@ const EXCLUDED_PROJECTS = [
   '-Users-jesse-Documents-GitHub-projects-claude-introspection'
 ];
 
-export async function indexConversations(limitToProject?: string, maxConversations?: number): Promise<void> {
+// Process items in batches with limited concurrency
+async function processBatch<T, R>(
+  items: T[],
+  processor: (item: T) => Promise<R>,
+  concurrency: number
+): Promise<R[]> {
+  const results: R[] = [];
+
+  for (let i = 0; i < items.length; i += concurrency) {
+    const batch = items.slice(i, i + concurrency);
+    const batchResults = await Promise.all(batch.map(processor));
+    results.push(...batchResults);
+  }
+
+  return results;
+}
+
+export async function indexConversations(
+  limitToProject?: string,
+  maxConversations?: number,
+  concurrency: number = 1
+): Promise<void> {
   console.log('Initializing database...');
   const db = initDatabase();
 
@@ -55,10 +79,22 @@ export async function indexConversations(limitToProject?: string, maxConversatio
     if (files.length === 0) continue;
 
     console.log(`\nProcessing project: ${project} (${files.length} conversations)`);
+    if (concurrency > 1) console.log(`  Concurrency: ${concurrency}`);
 
     // Create archive directory for this project
     const projectArchive = path.join(ARCHIVE_DIR, project);
     fs.mkdirSync(projectArchive, { recursive: true });
+
+    // Prepare all conversations first
+    type ConvToProcess = {
+      file: string;
+      sourcePath: string;
+      archivePath: string;
+      summaryPath: string;
+      exchanges: ConversationExchange[];
+    };
+
+    const toProcess: ConvToProcess[] = [];
 
     for (const file of files) {
       const sourcePath = path.join(projectPath, file);
@@ -78,20 +114,38 @@ export async function indexConversations(limitToProject?: string, maxConversatio
         continue;
       }
 
-      // Generate and save summary
-      const summaryPath = archivePath.replace('.jsonl', '-summary.txt');
-      if (!fs.existsSync(summaryPath)) {
-        try {
-          const summary = await summarizeConversation(exchanges);
-          fs.writeFileSync(summaryPath, summary, 'utf-8');
-          console.log(`  Summary: ${summary.split(/\s+/).length} words`);
-        } catch (error) {
-          console.log(`  Summary failed: ${error}`);
-        }
-      }
+      toProcess.push({
+        file,
+        sourcePath,
+        archivePath,
+        summaryPath: archivePath.replace('.jsonl', '-summary.txt'),
+        exchanges
+      });
+    }
 
-      // Generate embeddings and insert
-      for (const exchange of exchanges) {
+    // Batch summarize conversations in parallel
+    const needsSummary = toProcess.filter(c => !fs.existsSync(c.summaryPath));
+
+    if (needsSummary.length > 0) {
+      console.log(`  Generating ${needsSummary.length} summaries (concurrency: ${concurrency})...`);
+
+      await processBatch(needsSummary, async (conv) => {
+        try {
+          const summary = await summarizeConversation(conv.exchanges);
+          fs.writeFileSync(conv.summaryPath, summary, 'utf-8');
+          const wordCount = summary.split(/\s+/).length;
+          console.log(`  ✓ ${conv.file}: ${wordCount} words`);
+          return summary;
+        } catch (error) {
+          console.log(`  ✗ ${conv.file}: ${error}`);
+          return null;
+        }
+      }, concurrency);
+    }
+
+    // Now process embeddings and DB inserts (fast, sequential is fine)
+    for (const conv of toProcess) {
+      for (const exchange of conv.exchanges) {
         const embedding = await generateExchangeEmbedding(
           exchange.userMessage,
           exchange.assistantMessage
@@ -100,9 +154,8 @@ export async function indexConversations(limitToProject?: string, maxConversatio
         insertExchange(db, exchange, embedding);
       }
 
-      totalExchanges += exchanges.length;
+      totalExchanges += conv.exchanges.length;
       conversationsProcessed++;
-      console.log(`  Indexed ${file}: ${exchanges.length} exchanges`);
 
       // Check if we hit the limit
       if (maxConversations && conversationsProcessed >= maxConversations) {
@@ -118,7 +171,7 @@ export async function indexConversations(limitToProject?: string, maxConversatio
   console.log(`\n✅ Indexing complete! Conversations: ${conversationsProcessed}, Exchanges: ${totalExchanges}`);
 }
 
-export async function indexSession(sessionId: string): Promise<void> {
+export async function indexSession(sessionId: string, concurrency: number = 1): Promise<void> {
   console.log(`Indexing session: ${sessionId}`);
 
   // Find the conversation file for this session
@@ -187,8 +240,9 @@ export async function indexSession(sessionId: string): Promise<void> {
   }
 }
 
-export async function indexUnprocessed(): Promise<void> {
+export async function indexUnprocessed(concurrency: number = 1): Promise<void> {
   console.log('Finding unprocessed conversations...');
+  if (concurrency > 1) console.log(`Concurrency: ${concurrency}`);
 
   const db = initDatabase();
   await initEmbeddings();
@@ -196,8 +250,19 @@ export async function indexUnprocessed(): Promise<void> {
   const PROJECTS_DIR = getProjectsDir();
   const ARCHIVE_DIR = getArchiveDir();
   const projects = fs.readdirSync(PROJECTS_DIR);
-  let processed = 0;
 
+  type UnprocessedConv = {
+    project: string;
+    file: string;
+    sourcePath: string;
+    archivePath: string;
+    summaryPath: string;
+    exchanges: ConversationExchange[];
+  };
+
+  const unprocessed: UnprocessedConv[] = [];
+
+  // Collect all unprocessed conversations
   for (const project of projects) {
     if (EXCLUDED_PROJECTS.includes(project)) continue;
 
@@ -224,27 +289,47 @@ export async function indexUnprocessed(): Promise<void> {
 
       // Parse and check
       const exchanges = await parseConversation(sourcePath, project, archivePath);
-
       if (exchanges.length === 0) continue;
 
-      // Generate summary
-      const summary = await summarizeConversation(exchanges);
-      fs.writeFileSync(summaryPath, summary, 'utf-8');
-      console.log(`${project}/${file}: ${summary.split(/\s+/).length} words`);
+      unprocessed.push({ project, file, sourcePath, archivePath, summaryPath, exchanges });
+    }
+  }
 
-      // Index
-      for (const exchange of exchanges) {
-        const embedding = await generateExchangeEmbedding(
-          exchange.userMessage,
-          exchange.assistantMessage
-        );
-        insertExchange(db, exchange, embedding);
-      }
+  if (unprocessed.length === 0) {
+    console.log('✅ All conversations are already processed!');
+    db.close();
+    return;
+  }
 
-      processed++;
+  console.log(`Found ${unprocessed.length} unprocessed conversations`);
+  console.log(`Generating summaries (concurrency: ${concurrency})...\n`);
+
+  // Batch process summaries
+  await processBatch(unprocessed, async (conv) => {
+    try {
+      const summary = await summarizeConversation(conv.exchanges);
+      fs.writeFileSync(conv.summaryPath, summary, 'utf-8');
+      const wordCount = summary.split(/\s+/).length;
+      console.log(`  ✓ ${conv.project}/${conv.file}: ${wordCount} words`);
+      return summary;
+    } catch (error) {
+      console.log(`  ✗ ${conv.project}/${conv.file}: ${error}`);
+      return null;
+    }
+  }, concurrency);
+
+  // Now index embeddings
+  console.log(`\nIndexing embeddings...`);
+  for (const conv of unprocessed) {
+    for (const exchange of conv.exchanges) {
+      const embedding = await generateExchangeEmbedding(
+        exchange.userMessage,
+        exchange.assistantMessage
+      );
+      insertExchange(db, exchange, embedding);
     }
   }
 
   db.close();
-  console.log(`\n✅ Processed ${processed} unprocessed conversations`);
+  console.log(`\n✅ Processed ${unprocessed.length} conversations`);
 }
