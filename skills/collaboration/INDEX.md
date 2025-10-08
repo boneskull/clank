@@ -4,7 +4,7 @@ Working effectively with other agents and developers.
 
 ## Available Skills
 
-- skills/collaboration/brainstorming - Interactive idea refinement using Socratic method to develop fully-formed designs. Use when Jesse has new idea to explore. Before writing implementation plans.
+- skills/collaboration/brainstorming - Interactive idea refinement using Socratic method to develop fully-formed designs. Use when your human partner has new idea to explore. Before writing implementation plans.
 
 - skills/collaboration/writing-plans - Create detailed implementation plans with bite-sized tasks for engineers with zero codebase context. Use after brainstorming/design is complete. Before implementation begins.
 

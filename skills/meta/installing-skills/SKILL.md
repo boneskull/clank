@@ -74,7 +74,7 @@ ls -la ~/.claude/commands
 
 ### Step 5: Restart
 
-Tell Jesse: "Installation complete. Please restart your Claude session to pick up the new CLAUDE.md configuration."
+Tell your human partner: "Installation complete. Please restart your Claude session to pick up the new CLAUDE.md configuration."
 
 ## Quick Install (for humans)
 

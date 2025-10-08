@@ -10,7 +10,7 @@ Your personal wiki of proven techniques, patterns, and tools.
 
 **Starting a task?** Check the relevant category below.
 **Encountering a problem?** Search with grep: `grep -r "keyword" ~/.claude/skills/`
-**Not sure?** Ask Jesse: "Do I have a skill for X?"
+**Not sure?** Ask your human partner: "Do I have a skill for X?"
 
 ## Categories
 

@@ -33,4 +33,4 @@ Skills that have been created from this list will move here with links.
 - **Explain non-obvious** - Why can't you just figure this out?
 - **One skill per request** - Keep them focused
 
-Jesse reviews this periodically and we create skills together.
+your human partner reviews this periodically and we create skills together.

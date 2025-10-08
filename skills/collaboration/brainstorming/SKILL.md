@@ -1,7 +1,7 @@
 ---
 name: Brainstorming Ideas Into Designs
 description: Interactive idea refinement using Socratic method to develop fully-formed designs
-when_to_use: When Jesse says "I've got an idea", "Let's make/build/create", "I want to implement/add", "What if we". When starting design for complex feature. Before writing implementation plans. When idea needs refinement and exploration. ACTIVATE THIS AUTOMATICALLY when Jesse describes a feature or project idea - don't wait for /brainstorm command.
+when_to_use: When your human partner says "I've got an idea", "Let's make/build/create", "I want to implement/add", "What if we". When starting design for complex feature. Before writing implementation plans. When idea needs refinement and exploration. ACTIVATE THIS AUTOMATICALLY when your human partner describes a feature or project idea - don't wait for /brainstorm command.
 version: 2.0.0
 ---
 
@@ -26,7 +26,7 @@ Transform rough ideas into fully-formed designs through structured questioning a
 ### Phase 2: Exploration
 - Propose 2-3 different approaches (reference skills/coding/exploring-alternatives)
 - For each: Core architecture, trade-offs, complexity assessment
-- Ask Jesse which approach resonates
+- Ask your human partner which approach resonates
 
 ### Phase 3: Design Presentation
 - Present in 200-300 word sections
@@ -44,7 +44,7 @@ When design is approved and implementation will follow:
 ### Phase 5: Planning Handoff
 Ask: "Ready to create the implementation plan?"
 
-When Jesse confirms (any affirmative response):
+When your human partner confirms (any affirmative response):
 - Announce: "I'm using the Writing Plans skill to create the implementation plan."
 - Switch to skills/collaboration/writing-plans skill
 - Create detailed plan in the worktree

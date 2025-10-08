@@ -24,7 +24,7 @@ Write the test first. Watch it fail. Write minimal code to pass.
 - Refactoring
 - Behavior changes
 
-**Exceptions (ask Jesse):**
+**Exceptions (ask your human partner):**
 - Throwaway prototypes
 - Generated code
 - Configuration files
@@ -346,7 +346,7 @@ Can't check all boxes? You skipped TDD. Start over.
 
 | Problem | Solution |
 |---------|----------|
-| Don't know how to test | Write wished-for API. Write assertion first. Ask Jesse. |
+| Don't know how to test | Write wished-for API. Write assertion first. Ask your human partner. |
 | Test too complicated | Design too complicated. Simplify interface. |
 | Must mock everything | Code too coupled. Use dependency injection. |
 | Test setup huge | Extract helpers. Still complex? Simplify design. |
@@ -364,4 +364,4 @@ Production code → test exists and failed first
 Otherwise → not TDD
 ```
 
-No exceptions without Jesse's permission.
+No exceptions without your human partner's permission.

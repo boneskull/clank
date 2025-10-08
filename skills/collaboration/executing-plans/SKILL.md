@@ -1,7 +1,7 @@
 ---
 name: Executing Plans
 description: Execute detailed plans in batches with review checkpoints
-when_to_use: When have a complete implementation plan to execute. When implementing in separate session from planning. When Jesse points you to a plan file to implement.
+when_to_use: When have a complete implementation plan to execute. When implementing in separate session from planning. When your human partner points you to a plan file to implement.
 version: 2.0.0
 ---
 
@@ -20,7 +20,7 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 ### Step 1: Load and Review Plan
 1. Read plan file
 2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with Jesse before starting
+3. If concerns: Raise them with your human partner before starting
 4. If no concerns: Create TodoWrite and proceed
 
 ### Step 2: Execute Batch

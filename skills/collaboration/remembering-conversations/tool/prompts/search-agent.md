@@ -97,7 +97,7 @@ Main agent can:
 ```
 ### Summary
 
-Jesse needed to handle authentication errors in React Router 7 data loaders
+developer needed to handle authentication errors in React Router 7 data loaders
 without crashing the app. The solution uses RR7's errorElement + useRouteError()
 to catch 401s and redirect to login.
 
