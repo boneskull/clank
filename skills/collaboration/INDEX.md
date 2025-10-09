@@ -8,6 +8,8 @@ Working effectively with other agents and developers.
 
 - skills/collaboration/writing-plans - Create detailed implementation plans with bite-sized tasks for engineers with zero codebase context. Use after brainstorming/design is complete. Before implementation begins.
 
+- skills/collaboration/using-git-worktrees - Create isolated git worktrees with smart directory selection and safety verification. Use when starting feature implementation in isolation. When brainstorming transitions to code. Before executing plans.
+
 - skills/collaboration/executing-plans - Execute detailed plans in batches with review checkpoints. Use when have complete implementation plan to execute. When implementing in separate session from planning.
 
 - skills/collaboration/subagent-driven-development - Execute plan by dispatching fresh subagent per task with code review between tasks. Alternative to executing-plans when staying in same session. Use when tasks are independent. When want fast iteration with review checkpoints.
