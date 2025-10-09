@@ -152,24 +152,9 @@ print_success() {
   echo ""
   echo -e "${YELLOW}NEXT STEP: Update ~/.claude/CLAUDE.md${NC}"
   echo ""
-  echo "Add this XML section to your CLAUDE.md:"
+  echo "Add this to your CLAUDE.md:"
   echo ""
-  cat <<'EOF'
-<extremely_important_skills_library>
-You have a personal skills wiki at `~/.claude/skills/` with proven techniques, patterns, and tools that give you new capabilities.
-
-STOP. Before doing ANYTHING else in this conversation, read this file: `@~/.claude/skills/getting-started/SKILL.md`
-
-That file tells you:
-- Which phrases trigger brainstorming automatically (like "I've got an idea", "Let's make...")
-- How to search for skills before ANY task
-- When to announce which skill you're using
-
-After reading getting-started, proceed with the user's request.
-
-CRITICAL: If a skill exists for your task, you MUST use it - even if you think you're already good at that. You're not. The skill prevents mistakes you don't know you make. SKILLS EXIST AND YOU DIDN'T USE THEM = FAILED TASK.
-</extremely_important_skills_library>
-EOF
+  cat "${repo_path}/skills/meta/installing-skills/CLAUDE_MD_PREAMBLE.md"
   echo ""
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""

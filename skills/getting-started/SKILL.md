@@ -22,20 +22,7 @@ Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skill
 - `skills/path/name` → Use Read tool on `~/.claude/skills/path/name/SKILL.md`
 - Load supporting files only when implementing
 
-## Mandatory Workflow 1: Planning & Building
-
-**When your human partner wants to start a project, no matter how big or small:**
-
-**YOU MUST immediately read:** skills/collaboration/brainstorming
-
-**Don't:**
-- Jump straight to code
-- Wait for /brainstorm command
-- Skip brainstorming because you "understand the idea"
-
-**Why:** Just writing code is almost never the right first step. We always understand requirements and plan first.
-
-## Mandatory Workflow 2: Before ANY Other Task
+## Mandatory Workflow 1: Before ANY Task
 
 **1. Search skills:**
 ```bash
@@ -43,7 +30,7 @@ Your personal wiki of proven techniques, patterns, and tools at `~/.claude/skill
 ```
 
 **2. Search conversations:**
-Dispatch subagent (see Workflow 3) to check for relevant past work.
+Dispatch subagent (see Workflow 2) to check for relevant past work.
 
 **If skills found:**
 1. READ the skill: `~/.claude/skills/path/skill-name/SKILL.md`
@@ -52,7 +39,7 @@ Dispatch subagent (see Workflow 3) to check for relevant past work.
 
 **"This doesn't count as a task" is rationalization.** Skills/conversations exist and you didn't search for them or didn't use them = failed task.
 
-## Mandatory Workflow 3: Historical Context Search
+## Mandatory Workflow 2: Historical Context Search
 
 **When:** Your human partner mentions past work, issue feels familiar, starting task in familiar domain, stuck/blocked, before reinventing
 
@@ -147,9 +134,7 @@ Want a skill that doesn't exist? Edit skills/REQUESTS.md (at ~/.claude/skills/RE
 
 **Starting conversation?** You just read this. Good.
 
-**User proposes building something?** Use brainstorming skill immediately.
-
-**Starting any other task?** Run skills-search first, announce usage, follow what you find.
+**Starting any task?** Run skills-search first, announce usage, follow what you find.
 
 **Skill has checklist?** TodoWrite for every item.
 
