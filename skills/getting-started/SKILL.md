@@ -50,7 +50,7 @@ Dispatch subagent (see Workflow 3) to check for relevant past work.
 2. ANNOUNCE usage: "I'm using the [Skill Name] skill"
 3. FOLLOW the skill (many are rigid requirements)
 
-**Failure:** Skills/conversations exist and you didn't use them = failed task.
+**"This doesn't count as a task" is rationalization.** Skills/conversations exist and you didn't search for them or didn't use them = failed task.
 
 ## Mandatory Workflow 3: Historical Context Search
 
