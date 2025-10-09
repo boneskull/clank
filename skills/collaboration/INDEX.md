@@ -14,6 +14,8 @@ Working effectively with other agents and developers.
 
 - skills/collaboration/subagent-driven-development - Execute plan by dispatching fresh subagent per task with code review between tasks. Alternative to executing-plans when staying in same session. Use when tasks are independent. When want fast iteration with review checkpoints.
 
+- skills/collaboration/finishing-a-development-branch - Complete feature development with structured options for merge, PR, or cleanup. Use after completing implementation. When all tests passing. At end of executing-plans or subagent-driven-development.
+
 - skills/collaboration/remembering-conversations - Search previous Claude Code conversations for facts, patterns, decisions, and context using semantic or text search. Use when your human partner mentions "we discussed this before". When debugging similar issues. When looking for architectural decisions or code patterns from past work. Before reinventing solutions. When searching for git SHAs or error messages.
 
 - skills/collaboration/dispatching-parallel-agents - Use multiple Claude agents to investigate and fix independent problems concurrently. Use when you have 3+ unrelated failures that can be debugged in parallel.
