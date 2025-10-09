@@ -42,11 +42,11 @@ echo "{\"timestamp\":\"$timestamp\",\"query\":\"$query\"}" >> "$LOG_FILE" 2>/dev
 
 # Search all SKILL.md files - both content AND path names
 # Content search: grep file contents
-content_matches=$(grep -r "$@" "$SKILLS_DIR/" --include="SKILL.md" -l 2>/dev/null || true)
+content_matches=$(grep -E -r "$@" "$SKILLS_DIR/" --include="SKILL.md" -l 2>/dev/null || true)
 
 # Filename search: find all SKILL.md paths, then grep the paths themselves
 all_skills=$(find "$SKILLS_DIR/" -name "SKILL.md" -type f 2>/dev/null || true)
-path_matches=$(echo "$all_skills" | grep "$@" 2>/dev/null || true)
+path_matches=$(echo "$all_skills" | grep -E "$@" 2>/dev/null || true)
 
 # Combine and deduplicate
 results=$(printf "%s\n%s" "$content_matches" "$path_matches" | sort -u | grep -v '^$' || true)
