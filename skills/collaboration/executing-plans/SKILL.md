@@ -44,6 +44,13 @@ Based on feedback:
 - Execute next batch
 - Repeat until complete
 
+### Step 5: Complete Development
+
+After all tasks complete and verified:
+- Announce: "I'm using the Finishing a Development Branch skill to complete this work."
+- Switch to skills/collaboration/finishing-a-development-branch
+- Follow that skill to verify tests, present options, execute choice
+
 ## Remember
 - Review plan critically first
 - Follow plan steps exactly

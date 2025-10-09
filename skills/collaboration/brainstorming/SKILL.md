@@ -35,11 +35,10 @@ Transform rough ideas into fully-formed designs through structured questioning a
 
 ### Phase 4: Worktree Setup (for implementation)
 When design is approved and implementation will follow:
-1. Detect project name from git config
-2. Create worktree: `mkdir -p ~/.clank/worktrees/<project> && cd ~/.clank/worktrees/<project> && git worktree add <feature-name>`
-3. Run project setup (npm install, cargo build, etc.)
-4. Verify clean baseline (npm test, cargo test, etc.)
-5. Report worktree location
+- Announce: "I'm using the Using Git Worktrees skill to set up an isolated workspace."
+- Switch to skills/collaboration/using-git-worktrees
+- Follow that skill's process for directory selection, safety verification, and setup
+- Return here when worktree ready
 
 ### Phase 5: Planning Handoff
 Ask: "Ready to create the implementation plan?"

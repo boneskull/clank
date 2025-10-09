@@ -101,6 +101,13 @@ After all tasks complete, dispatch final code-reviewer:
 - Checks all plan requirements met
 - Validates overall architecture
 
+### 7. Complete Development
+
+After final review passes:
+- Announce: "I'm using the Finishing a Development Branch skill to complete this work."
+- Switch to skills/collaboration/finishing-a-development-branch
+- Follow that skill to verify tests, present options, execute choice
+
 ## Example Workflow
 
 ```
