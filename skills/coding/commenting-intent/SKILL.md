@@ -19,6 +19,7 @@ Good comments explain WHY, not WHAT. Code already shows what it does. Comments s
 **Agents comment mechanics (what code does):**
 
 ❌ **Over-commenting (baseline):**
+
 ```python
 # Calculate subtotal by multiplying price and quantity for each item, then summing
 subtotal = sum(item.price * item.quantity for item in items)
@@ -30,9 +31,24 @@ tax = subtotal * tax_rate
 total = subtotal + tax
 ```
 
+```typescript
+// Calculate subtotal by multiplying price and quantity for each item, then summing
+const subtotal = items.reduce(
+  (sum, item) => sum + item.price * item.quantity,
+  0,
+);
+
+// Calculate tax amount based on the subtotal and tax rate
+const tax = subtotal * taxRate;
+
+// Calculate final total by adding subtotal and tax
+const total = subtotal + tax;
+```
+
 **Problem:** Comments just restate obvious code. No value added.
 
 ✅ **Comment intent only:**
+
 ```python
 def calculate_total_price(items, tax_rate):
     """Calculate order total including tax."""
@@ -41,11 +57,29 @@ def calculate_total_price(items, tax_rate):
     return subtotal + tax  # No comments needed - code is clear
 ```
 
+```typescript
+interface OrderItem {
+  price: number;
+  quantity: number;
+}
+
+function calculateTotalPrice(items: OrderItem[], taxRate: number): number {
+  /** Calculate order total including tax. */
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
+  const tax = subtotal * taxRate;
+  return subtotal + tax; // No comments needed - code is clear
+}
+```
+
 ## What to Comment
 
 ### 1. Non-Obvious Decisions
 
 ✅ **WHY you chose this approach:**
+
 ```python
 def is_rate_limited(user_id, redis_client):
     # Using Redis instead of in-memory to support distributed rate limiting
@@ -60,11 +94,36 @@ def is_rate_limited(user_id, redis_client):
     return int(current) >= 100  # Limit per product requirements doc
 ```
 
+```typescript
+interface RedisClient {
+  get(key: string): Promise<string | null>;
+  setex(key: string, ttl: number, value: number): Promise<void>;
+}
+
+async function isRateLimited(
+  userId: string,
+  redisClient: RedisClient,
+): Promise<boolean> {
+  // Using Redis instead of in-memory to support distributed rate limiting
+  // across multiple app servers. Limit: 100 req/min per business requirements.
+  const key = `rate_limit:${userId}`;
+  const current = await redisClient.get(key);
+
+  if (current === null) {
+    await redisClient.setex(key, 60, 1); // 60 sec TTL
+    return false;
+  }
+
+  return parseInt(current) >= 100; // Limit per product requirements doc
+}
+```
+
 **Explains:** WHY Redis, WHY these limits, WHERE requirements came from.
 
 ### 2. Algorithms and Complex Logic
 
 ✅ **WHY this algorithm:**
+
 ```python
 def find_user(users, email):
     # Binary search requires sorted array. We sort by email on load
@@ -73,15 +132,36 @@ def find_user(users, email):
     return binary_search(users, email)
 ```
 
+```typescript
+interface User {
+  email: string;
+  // ... other properties
+}
+
+function findUser(users: User[], email: string): User | null {
+  // Binary search requires sorted array. We sort by email on load
+  // to enable O(log n) lookups. Worth the upfront sort cost because
+  // lookups happen 100x more frequently than updates.
+  return binarySearch(users, email);
+}
+```
+
 **Explains:** WHY binary search, WHY pre-sorted, trade-off reasoning.
 
 ### 3. Magic Numbers and Constants
 
 ✅ **WHY these values:**
+
 ```python
 MAX_RETRIES = 3  # Testing showed 3 retries handles 99.9% of transient failures
 TIMEOUT_MS = 5000  # API SLA guarantees < 5sec response time
 BATCH_SIZE = 100  # Larger batches caused memory issues in prod (incident #1234)
+```
+
+```typescript
+const MAX_RETRIES = 3; // Testing showed 3 retries handles 99.9% of transient failures
+const TIMEOUT_MS = 5000; // API SLA guarantees < 5sec response time
+const BATCH_SIZE = 100; // Larger batches caused memory issues in prod (incident #1234)
 ```
 
 **Explains:** WHERE values came from (testing, SLA, incident).
@@ -89,11 +169,19 @@ BATCH_SIZE = 100  # Larger batches caused memory issues in prod (incident #1234)
 ### 4. Workarounds and Gotchas
 
 ✅ **WHY unusual code:**
+
 ```python
 # WORKAROUND: Library bug #456 - must call reset() twice
 # Fixed in v2.0 but we're on v1.8
 client.reset()
 client.reset()
+```
+
+```typescript
+// WORKAROUND: Library bug #456 - must call reset() twice
+// Fixed in v2.0 but we're on v1.8
+client.reset();
+client.reset();
 ```
 
 **Warns future maintainer:** Unusual code has reason, link to issue.
@@ -103,6 +191,7 @@ client.reset()
 ### Don't Comment Obvious Code
 
 ❌ **Restates the code:**
+
 ```python
 # Set user name to "John"
 user.name = "John"
@@ -113,7 +202,19 @@ for item in items:
     process(item)
 ```
 
+```typescript
+// Set user name to "John"
+user.name = 'John';
+
+// Loop through items
+for (const item of items) {
+  // Process the item
+  process(item);
+}
+```
+
 ✅ **Let code speak:**
+
 ```python
 user.name = "John"
 
@@ -121,9 +222,18 @@ for item in items:
     process(item)
 ```
 
+```typescript
+user.name = 'John';
+
+for (const item of items) {
+  process(item);
+}
+```
+
 ### Don't Comment Mechanics of Standard Patterns
 
 ❌ **Obvious pattern:**
+
 ```python
 # Initialize search boundaries to cover entire array
 left, right = 0, len(arr) - 1
@@ -132,13 +242,34 @@ left, right = 0, len(arr) - 1
 while left <= right:
 ```
 
+```typescript
+// Initialize search boundaries to cover entire array
+let left = 0, right = arr.length - 1;
+
+// Continue searching while there's a valid range
+while (left <= right) {
+```
+
 ✅ **Comment intent only:**
+
 ```python
 def binary_search(arr, target):
     # Binary search for O(log n) performance on sorted array
     left, right = 0, len(arr) - 1
     while left <= right:
         # ... implementation (standard pattern, no comments needed)
+```
+
+```typescript
+function binarySearch<T>(arr: T[], target: T): number {
+  // Binary search for O(log n) performance on sorted array
+  let left = 0,
+    right = arr.length - 1;
+  while (left <= right) {
+    // ... implementation (standard pattern, no comments needed)
+  }
+  return -1;
+}
 ```
 
 ## The Comment Test
@@ -159,18 +290,19 @@ def binary_search(arr, target):
 
 ## Quick Reference
 
-| Comment This | Don't Comment This |
-|--------------|---------------------|
-| WHY you chose this approach | WHAT the code does |
-| Non-obvious decisions | Obvious assignments |
-| Magic number sources | Standard patterns |
-| Algorithm trade-offs | Mechanics of loops/conditionals |
-| Workarounds and gotchas | Self-evident operations |
-| Business rule origins | Variable declarations |
+| Comment This                | Don't Comment This              |
+| --------------------------- | ------------------------------- |
+| WHY you chose this approach | WHAT the code does              |
+| Non-obvious decisions       | Obvious assignments             |
+| Magic number sources        | Standard patterns               |
+| Algorithm trade-offs        | Mechanics of loops/conditionals |
+| Workarounds and gotchas     | Self-evident operations         |
+| Business rule origins       | Variable declarations           |
 
 ## Real-World Impact
 
 From baseline:
+
 - Agents commented every line of simple price calculation (over-commenting)
 - Comments restated code without adding value
 - Missed opportunities to explain WHY (decisions, trade-offs)
