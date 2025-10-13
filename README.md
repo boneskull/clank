@@ -6,6 +6,8 @@ A comprehensive library of proven techniques, patterns, and tools for Claude AI 
 
 ### 1. Install
 
+> If you're using VS Code with GitHub Copilot, see [Using Clank with GitHub Copilot for VS Code](COPILOT.md).
+
 **With GitHub CLI (recommended):**
 ```bash
 mkdir -p ~/.clank
