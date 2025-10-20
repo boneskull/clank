@@ -26,6 +26,8 @@ Core software engineering practices for writing clean, maintainable code.
 
 - skills/coding/validating-inputs - Check all external inputs for validity - garbage in, nothing out. Use before implementing any function receiving external data, when writing functions taking parameters from users/APIs/databases, when you see missing validation or silent failures.
 
+- skills/coding/writing-type-guards - Write TypeScript type guard functions that satisfy the type checker without unsafe assertions. Use when writing `obj is Type` functions, when TypeScript errors about property access on unknown types, when validating external data, when deserializing JSON with unknown structure.
+
 - skills/coding/keeping-routines-focused - Each routine does one thing and does it well - extract when routines have multiple responsibilities. Use when writing any function, when routine description has "and", when routine is hard to name, when longer than 200 lines, when parameter list exceeds 7.
 
 - skills/coding/refactoring-safely - Refactor with tests first, one change at a time, never mix refactoring with bug fixes or features. Use before refactoring any code, when discovering bugs during refactoring, when tempted to "fix while I'm here", when making multiple changes at once, when refactoring without tests.
@@ -43,21 +45,25 @@ Core software engineering practices for writing clean, maintainable code.
 These skills implement Code Complete's software construction fundamentals:
 
 **1. Design Before Implementation**
+
 - Design in pseudocode first (designing-before-coding)
 - Explore 2-3 alternatives (exploring-alternatives)
 - Pick best approach, THEN code
 
 **2. Managing Complexity**
+
 - Keep routines focused on single responsibility (keeping-routines-focused)
 - Minimize variable scope and live time (localizing-variables)
 - Break into simple pieces
 
 **3. Defensive Quality**
+
 - Validate all external inputs (validating-inputs)
 - Name things clearly and accurately (naming-variables, naming-by-domain)
 - Document with evergreen comments (writing-evergreen-comments)
 
 **4. Code in the Present**
+
 - Names describe domain purpose (not implementation or history)
 - Comments explain current behavior (not what changed)
 - No temporal context ("new", "old", "refactored", "improved")
